@@ -12,7 +12,7 @@ data_na <- read.fst("covariates.fst")
 
 NBINDIV_na <- is.na(data_na$NBINDIV)
 data <- subset(data_na, !NBINDIV_na)
-
+##just testing something
 
 
 
