@@ -18,7 +18,7 @@
 
 ![Monthly temporal population fluctuations (bar chart and trends), combination of two different representations](./Visualised_Data_basic/temporal_changes_combined_years_line_bar_page-0001.jpg)
 
-![Weekly and monthly Culicoides population fluctiations during the 2009-2012 timeline](.Visualised_Data_basic/temporal_changes_page-0001.jpg)
+![Weekly and monthly Culicoides population fluctiations during the 2009-2012 timeline](./Visualised_Data_basic/temporal_changes_page-0001.jpg)
 
 ## Roadmap
 
