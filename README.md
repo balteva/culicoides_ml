@@ -9,6 +9,9 @@
     **Rstudio script for spatial data visualisation + some boxplots (need to transfer them to covariates_jeuxdedonnees script)**
 ## Description
 
+## Visuals
+![Boxplots of culicoides counts](./culicoides_ml/Visualised_Data_basic/boxplots_vertical_page-0001.jpg)
+
 ## Roadmap
 
 
