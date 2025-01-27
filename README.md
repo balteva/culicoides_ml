@@ -10,7 +10,7 @@
 ## Description
 
 ## Visuals
-![Boxplots of culicoides counts](./culicoides_ml/Visualised_Data_basic/boxplots_vertical_page-0001.jpg)
+![Boxplots of culicoides counts](./Visualised_Data_basic/boxplots_vertical_page-0001.jpg)
 
 ## Roadmap
 
