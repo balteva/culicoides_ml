@@ -3,8 +3,10 @@
 # 2025 Internship subject: **Spatio-temporal modeling of Culidcoides populations in France using Machine Learning**
 
 ## Scripts
-- `covariates_jeuxdedonnees.R`
-    **Rstudio script for primary data preprocessing and some basic visualisation**
+- `covariates_hist_timeseries.R`
+    **Rstudio script for primary data preprocessing and some basic visualisation such as histograms and timeseries**
+- `covariates_boxplots.R`
+    **Rstudio script for boxplots**
 - `spatial_covariates.R`
     **Rstudio script for spatial data visualisation + some boxplots (need to transfer them to covariates_jeuxdedonnees script)**
 ## Description
