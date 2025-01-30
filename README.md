@@ -60,7 +60,7 @@
          Barcharts with Ecoclimatic zone
 ![Barchart timeseries of standardized counts of *Culidoides spp.* per trap per each sampling day (month's mean) with Ecoclimatic zones](./Visualised_Data_basic/Spatio-temporal/temporal_month_avg_per_trap_ECO_CLI_bars.jpeg)
 -----------------------------------
-**<p align="center"> <mark>4. Maps</mark>** </p>>
+**<p align="center"> <mark>4. Maps</mark>** </p>
 
         Culicoides counts across France during different years visualised in a map
 ![Culicoides counts across France during different years visualised in a map](./Visualised_Data_basic/Spatio-temporal/france2009_2012_maps_page-0001.jpg)
