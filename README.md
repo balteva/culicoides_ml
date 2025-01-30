@@ -61,13 +61,12 @@
 ![Barchart timeseries of standardized counts of *Culidoides spp.* per trap per each sampling day (month's mean) with Ecoclimatic zones](./Visualised_Data_basic/Spatio-temporal/temporal_month_avg_per_trap_ECO_CLI_bars.jpeg)
 -----------------------------------
 **<p align="center"> <mark>4. Maps</mark>** </p>>
-
-![Culicoides counts across France during different years visualised in a map](./Visualised_Data_basic/france2009_2012_maps_page-0001.jpg)
+        Culicoides counts across France during different years visualised in a map
+![Culicoides counts across France during different years visualised in a map](./Visualised_Data_basic/Spatio_temporal/france2009_2012_maps_page-0001.jpg)
 ----------------------------------
-## Roadmap
-# **Culicoides project**
+## Roadmap of the **Culicoides project**
 
-## **Backround**
+### **Backround**
 - **Bibliography**
     - Culicoides in France since 2006
         - What trends were seen?
@@ -88,7 +87,7 @@
         - Distribution
     - Current predictive models
 
-## **Problematic**
+### **Problematic**
 - Current models not sufficient
     - Lack of robustness?
     - Low accuracy?
@@ -96,12 +95,12 @@
 - Alternative approaches
     - intro into ML
 
-## **Relevance of this project**
+### **Relevance of this project**
 - other projects with ML that have shown success (*Aedes spp*.)
 - Could provide new information about environmental variables for epidemiological data and surveillance tactics:
     - will extract knowledge about variables at the very least, at most can predict
 
-## **Methods**
+### **Methods**
 - Data Exploration
     - Plots for visualising data distribution
         - Heatmaps
@@ -113,17 +112,20 @@
 - Variable selection
 - Model construction
 
-## **Results**
+### **Results**
 - Describe temporal and spatial distribution of culicoides
 - Data driven instead of knoweldge based - VectorNet data
 
-## **Questions**
+### **Questions**
 - Ecological determinants in culicoides pop. distribution?
 - What contributed to BTV + EHD reemergence? Due to Culicoides population changes or introduction of new serotypes of virus?
 - Why is there heterogeneity in distribution in ***local*** small scale?
 - Do the ML models make sense in ecological and epidemiological terms?
 - Am I predicting *Culicoides* complex distribution OR specific species?
 - regions or times when the predictions work less well (AOA)
+
+----
+
 ## Contributing
 
 ## Authors and acknowledgment
