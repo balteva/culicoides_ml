@@ -1,8 +1,7 @@
 library(fst)
 library(tidyverse)
 library(lubridate)
-library(gridExtra)
-library(dplyr)
+
 
 
 
@@ -15,7 +14,7 @@ data <- subset(data_na, !NBINDIV_na)
 #selecting columns of interest, resulting df has counts per espece de culicoides!
 df_short <- as.data.frame(data) %>%
   select(ID_SITE, DATE, NBINDIV,ESPECE, ECO_CLI, longitude, latitude) %>%
-  filter(NBINDIV != 0) %>%
+#  filter(NBINDIV != 0) %>%
   mutate(DATE = as.Date(DATE))
 
 
@@ -26,10 +25,10 @@ df_short_all_species <- df_short %>%
   summarise(NBINDIV_all_sp=sum(NBINDIV), .groups="drop")#summing up all the different species collected per trap site to display as one sp
 
 df_short_all_species$month <- month(df_short_all_species$DATE)
-#jpeg("../../culicoides_boxplot_all_species_separate_eco_cli_years2.jpeg")
+#jpeg("../../cul_boxplot_years_summarised_simple.jpeg")
 ##counts per trap per night during each month for different years with ecoclimatic zone
 df_short_all_species %>%
-  ggplot( aes(x=factor(month), y=NBINDIV_all_sp, fill= ECO_CLI)) +
+  ggplot( aes(x=as.factor(month), y=NBINDIV_all_sp, fill= ECO_CLI)) +
   geom_boxplot(outliers= F)  +
   theme_minimal() +
   theme(
@@ -39,14 +38,14 @@ df_short_all_species %>%
   xlab("month") +
   ylab("n of culicoides") +
   labs(fill="Ecoclimatic Zone")+
-  facet_wrap(~year(DATE))
+  facet_grid(~year(DATE) ~ECO_CLI)
 
 #dev.off()
 ##############
-#jpeg("../../boxplot_pertrap_pernight_simple_years__by_eco_cli.jpeg")
+#jpeg("../../cul_boxplot_years_separate_eco_cli.jpeg")
 ##counts per trap per night during each month for different years without ecoclimatic zone
 df_short_all_species %>%
-  ggplot( aes(x=factor(month), y=NBINDIV_all_sp))+ 
+  ggplot( aes(x=factor(month), y=NBINDIV_all_sp, fill=ECO_CLI))+ 
   geom_boxplot(outliers= F)  +
   theme_minimal() +
   theme(
@@ -56,7 +55,7 @@ df_short_all_species %>%
   xlab("month") +
   ylab("n of culicoides") +
   labs(fill="Ecoclimatic Zone")+
- facet_wrap(~year(DATE))
+ facet_grid(~ECO_CLI~year(DATE))
 
 #dev.off()
 
