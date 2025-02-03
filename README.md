@@ -54,8 +54,8 @@
          With Ecoclmatic Zone
 ![Timeseries of standardized counts of *Culidoides spp.* per trap per each sampling day (month's mean) with Ecoclimatic zones](./Visualised_Data_basic/Spatio-temporal/temporal_month_avg_per_trap_ECO_CLI.jpeg)
 
-        Same data but barcharts
-![Barchart timeseries of standardized counts of *Culidoides spp.* per trap per each sampling day (month's mean)](./Visualised_Data_basic/Spatio-temporal/temporal_month_avg_per_trap_bars.jpeg)
+        Same data but with each month's mean
+![Barchart timeseries of standardized counts of *Culidoides spp.* per trap per each sampling day (month's mean)](./Visualised_Data_basic/Spatio-temporal/temporal_month_avg_per_trap_eco_cli_detailed_bars.jpeg)
 
          Barcharts with Ecoclimatic zone
 ![Barchart timeseries of standardized counts of *Culidoides spp.* per trap per each sampling day (month's mean) with Ecoclimatic zones](./Visualised_Data_basic/Spatio-temporal/temporal_month_avg_per_trap_ECO_CLI_bars.jpeg)
