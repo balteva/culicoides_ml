@@ -13,8 +13,8 @@
 
 ## Visuals
 **<p align="center"> <mark>1. Boxplots</mark>** </p>
-
-        Culidoides spp. counts per trap per night 2009-2012
+***(NOTE: outlier values are excluded for all boxplots and histograms)***
+        Culidoides spp. counts per trap per night 2009-2012 
 ![*Culicoides spp.* counts per trap per night 2009-2012](./Visualised_Data_basic/Boxplots/boxplot_pertrap_pernight_simple_years.jpeg)
 
         With Ecolimatic zones
@@ -54,7 +54,7 @@
          With Ecoclmatic Zone
 ![Timeseries of standardized counts of *Culidoides spp.* per trap per each sampling day (month's mean) with Ecoclimatic zones](./Visualised_Data_basic/Spatio-temporal/temporal_month_avg_per_trap_ECO_CLI.jpeg)
 
-        Same data but with each month's mean
+        Same data but separated by Ecoclimatic Zone and represented with bars
 ![Barchart timeseries of standardized counts of *Culidoides spp.* per trap per each sampling day (month's mean)](./Visualised_Data_basic/Spatio-temporal/temporal_month_avg_per_trap_eco_cli_detailed_bars.jpeg)
 
          Barcharts with Ecoclimatic zone
