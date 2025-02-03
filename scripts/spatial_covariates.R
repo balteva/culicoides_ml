@@ -6,10 +6,13 @@ library(mapview)
 library(tidyverse)
 
 
-library(hrbrthemes)
-library(viridis)
+# library(hrbrthemes)
+# library(viridis)
 
-df_short <- read.csv("../df_short.csv") 
+df_short <- read.csv("../df_short.csv") %>%
+  group_by(ID_SITE, DATE, longitude, latitude) %>%
+  summarise(NBINDIV = sum(NBINDIV), .groups = "drop") 
+
 df_short_sf <- df_short %>%
   st_as_sf(coords = c("longitude", "latitude"), crs=4326)  #st_as_sf is convert st to sf object
 
@@ -119,43 +122,65 @@ france <- st_read("../gadm40_FRA_shp/gadm40_FRA_0.shp")
  
  
 
+#  
+# counts_all <- as.data.frame(df_short_sf) %>%
+#   select(NBINDIV, year, ID_SITE) %>%
+#   group_by(year)
+# 
+# counts_all$year <- as.factor(counts_all$year)
+# 
+#  
+# boxplot_vertical <- counts_all %>%
+#    ggplot( aes(x=year, y=NBINDIV, fill=year)) +
+#    geom_boxplot() +
+#   scale_y_log10() +
+#   #geom_jitter(color="black", size=0.4, alpha=0.9) + ##to show all data points(makes it look messy)
+#   theme_minimal() +
+#    theme(
+#      legend.position="none",
+#      plot.title = element_text(size=11)) +
+#    ggtitle("Boxplot of Culicoides counts for different years") +
+#    xlab("year") +
+#    ylab("n of culicoides (log scale)")
+# 
+# 
+# 
+# boxplot_horizontal <- counts_all %>%
+#   ggplot( aes(x=NBINDIV, y=year, fill=year)) +
+#   geom_boxplot() +
+#   scale_x_log10() +
+#   #geom_jitter(color="black", size=0.4, alpha=0.9) + 
+#   theme_minimal() +
+#   theme(
+#     legend.position="none",
+#     plot.title = element_text(size=11)) +
+#   ggtitle("Boxplot of Culicoides counts for different years") +
+#   xlab("n of culicoides (log scale)") +
+#   ylab("year")
  
-counts_all <- as.data.frame(df_short_sf) %>%
-  select(NBINDIV, year, ID_SITE) %>%
-  group_by(year)
 
-counts_all$year <- as.factor(counts_all$year)
-
+-----------------------------------------------
+  #trying to make heatmaps
+----------------------------------------------
+   df_short_sf_binned <- df_short %>%
+   mutate(
+     x_bin = cut(longitude, breaks = 25), # Adjust the number of breaks
+     y_bin = cut(latitude, breaks = 25)) %>%
+   group_by(x_bin, y_bin,DATE) %>%
+   summarize(total_indiv = sum(NBINDIV)) %>%
+   ungroup()
  
-boxplot_vertical <- counts_all %>%
-   ggplot( aes(x=year, y=NBINDIV, fill=year)) +
-   geom_boxplot() +
-  scale_y_log10() +
-  #geom_jitter(color="black", size=0.4, alpha=0.9) + ##to show all data points(makes it look messy)
-  theme_minimal() +
-   theme(
-     legend.position="none",
-     plot.title = element_text(size=11)) +
-   ggtitle("Boxplot of Culicoides counts for different years") +
-   xlab("year") +
-   ylab("n of culicoides (log scale)")
+ # Plot heatmap
+ ggplot(df_short_sf_binned, aes(x = x_bin, y = y_bin, fill = total_indiv)) +
+   geom_tile() +
+   scale_fill_gradient(low = "blue", high = "red") +
+   labs(title = "Heatmap of Individuals per Site",
+        x = "Longitude",
+        y = "Latitude",
+        fill = "Individuals") +
+   facet_wrap(~year(DATE))
+   theme_minimal()+
+    
+ geom_sf(data = france, fill = "lightblue", color = "black")
 
 
-
-boxplot_horizontal <- counts_all %>%
-  ggplot( aes(x=NBINDIV, y=year, fill=year)) +
-  geom_boxplot() +
-  scale_x_log10() +
-  #geom_jitter(color="black", size=0.4, alpha=0.9) + 
-  theme_minimal() +
-  theme(
-    legend.position="none",
-    plot.title = element_text(size=11)) +
-  ggtitle("Boxplot of Culicoides counts for different years") +
-  xlab("n of culicoides (log scale)") +
-  ylab("year")
- 
-library(gridExtra)
-pdf("C:/Users/ibalt/OneDrive/Desktop/boxplots.pdf", width = 8, height = 10)
-grid.arrange(boxplot_vertical, ncol = 1, nrow = 1)
-dev.off()
