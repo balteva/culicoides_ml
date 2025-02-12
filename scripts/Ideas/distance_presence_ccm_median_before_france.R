@@ -4,7 +4,7 @@ library(patchwork)
 library(correlation)
 
 # script 4  presence only (with median only for NBINDIV)
-df_model <- read.csv(file.path("../2025_ieva_culicoides/data","df_to_model_before.csv")) %>%
+df_model <- read.csv(file.path("C:/Users/ibalt/OneDrive/Desktop/uni/M2 stage/Cullicoides_data/data/df_to_model_before.csv")) %>%
   select(-peak_date)%>%
   group_by( ECO_CLI, date) %>% 
   summarise(NBINDIV = median(effectif_jour_mean, na.rm = TRUE),
