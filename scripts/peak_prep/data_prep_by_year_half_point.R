@@ -3,9 +3,9 @@ library(fst)
 library(lubridate)
 
 
-load("../database_ocapi_09_12_survFR.rda")
+load("../../database_ocapi_09_12_survFR.rda")
 
-ecocli <-  read_delim(file.path("../2025_ieva_culicoides/data","meteo_df.csv")) %>%
+ecocli <-  read_delim(file.path("../../data","meteo_df.csv")) %>%
   dplyr::select(ID_SITE,ECO_CLI) %>%
   distinct() #from the meteo df im just extracting the ecoclim zone because ocapi doesnt have it
 
@@ -141,14 +141,28 @@ split_by_peak <- function(df, peak_dates, indicator, peak) {
 } 
 
 #################"
-france2009before <-split_by_peak(df_pieges_2009, peak_dates_2009_france, "france", "before")
-france2010before <-split_by_peak(df_pieges_2010, peak_dates_2010_france, "france", "before")
-france2011before <-split_by_peak(df_pieges_2011, peak_dates_2011_france, "france", "before")
-france2012before <-split_by_peak(df_pieges_2012, peak_dates_2012_france, "france", "before")
+# france2009before <-split_by_peak(df_pieges_2009, peak_dates_2009_france, "france", "before")
+# france2010before <-split_by_peak(df_pieges_2010, peak_dates_2010_france, "france", "before")
+# france2011before <-split_by_peak(df_pieges_2011, peak_dates_2011_france, "france", "before")
+# france2012before <-split_by_peak(df_pieges_2012, peak_dates_2012_france, "france", "before")
+# 
+# france_before <-rbind(france2009before,france2010before, france2011before, france2012before)
+# 
+# write.csv(france_before, "../../france_before_peak.csv")
 
-france_before <-rbind(france2009before,france2010before, france2011before, france2012before)
 
-write.csv(france_before, "../../france_before_peak.csv")
+france2009after <-split_by_peak(df_pieges_2009, peak_dates_2009_france, "france", "after")
+france2010after <-split_by_peak(df_pieges_2010, peak_dates_2010_france, "france", "after")
+france2011after <-split_by_peak(df_pieges_2011, peak_dates_2011_france, "france", "after")
+france2012after <-split_by_peak(df_pieges_2012, peak_dates_2012_france, "france", "after")
+
+france_after <-rbind(france2009after,france2010after, france2011after, france2012after)
+
+write.csv(france_after, "../../france_after_peak.csv")
+
+
+
+
 
 ggplot(france_before, aes(x = month(DATE))) +
   geom_line(aes(y = effectif_jour_mean)) +
