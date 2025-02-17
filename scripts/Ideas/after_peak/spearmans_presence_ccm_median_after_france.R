@@ -5,11 +5,11 @@ library(correlation)
 
 
 #this is for presence only (with median only for NBINDIV)
-df_model <- read.csv(file.path("C:/Users/ibalt/OneDrive/Desktop/uni/M2 stage/Cullicoides_data/data/df_to_model_before.csv"))%>%
+df_model <- read.csv(file.path("C:/Users/ibalt/OneDrive/Desktop/uni/M2 stage/Cullicoides_data/data/df_to_model_after.csv"))%>%
   rename(NBINDIV=4)%>% #renaming col 4 because mutate is bugged
   group_by( ECO_CLI, date) %>% 
   summarise(NBINDIV = median(NBINDIV, na.rm = TRUE),
-            across(RR_0_0:EVI_2_3, mean, na.rm = TRUE))  # mean for climatic variables
+    across(RR_0_0:EVI_2_3, mean, na.rm = TRUE))  # mean for climatic variables
 
 df_model <-  df_model %>%
   mutate(presence_culi = ifelse(NBINDIV<1,0,1)) %>% #since using median we can filter for less than 1 as absence
@@ -28,9 +28,7 @@ fun_compute_correlation_univ <- function(df,indicator){
   
   if(indicator == "presence"){
     var_to_keep = "presence_culi"
-  } else if (indicator == "abundance"){
-    var_to_keep = "NBINDIV"
-  }
+  } 
   #SPEARMANS CORRELATION function
   func <- function(x){
     df2 <- df %>% dplyr::select(var_to_keep,!!x)  #,ID_SITE
@@ -46,12 +44,12 @@ fun_compute_correlation_univ <- function(df,indicator){
 }
 
 
-## presence/absence
+## presence/absence spearmans corr
 corr_univ_presence <- df_model %>%
   group_split(ECO_CLI) %>%
   map_dfr(.,~fun_compute_correlation_univ(., "presence")) %>%
   as.tibble() %>%
-  mutate(indicator = "presence")
+  mutate(indicator = "presence")#for spearmans dont need to edit coeff values
 
 ### Plot function
 fun_ccm_plot2 <- function(correlation_df, var) {
@@ -138,6 +136,6 @@ plots_univ_spearman_temporal_mf <- univ_spearman_temporal_mf %>%
 
 #Each row in order of:"FRANCE", "Continental", "Mediterranean" ,"Atlantic","Alpine"
 
-p_meteo_presence <- patchwork::wrap_plots(plots_univ_spearman_temporal_mf$univ_temporal[1:5], ncol = 1, nrow = 5)
+p_meteo_presence_after <- patchwork::wrap_plots(plots_univ_spearman_temporal_mf$univ_temporal[1:5], ncol = 1, nrow = 5)
 
 

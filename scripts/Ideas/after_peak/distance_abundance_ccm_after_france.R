@@ -3,18 +3,15 @@ library(furrr)
 library(patchwork)
 library(correlation)
 
-
 #this summary is for abundance
 
-df_model <- read.csv(file.path("../../data","df_to_model.csv")) %>%
+df_model <- read.csv(file.path("C:/Users/ibalt/OneDrive/Desktop/uni/M2 stage/Cullicoides_data/data/df_to_model_after.csv"))%>%
+  select(-peak_date)%>%
+  rename(NBINDIV=4)%>% #renaming the fourth column, for some reason cant do it with just mutate >;(
   group_by(  ECO_CLI, date) %>% #might be for the grouped analysis for the commented out code
-  summarise_at(vars(NBINDIV:EVI_5_6), mean, na.rm = TRUE)
+  summarise_at(vars(NBINDIV:EVI_2_3), mean, na.rm = TRUE)
 
-df_model <-  df_model %>%
-  mutate(presence_culi = ifelse(NBINDIV<1,0,1)) %>% #?why 3 and not 1 --considered in our case as an indicator of presence/absence
-  relocate(NBINDIV, presence_culi, .after = date) %>% ##edited this spart
-  filter(!is.na(presence_culi)) %>%
-  as_tibble()
+
 
 ### Adding france entiere to  eco_clim column
 
@@ -26,8 +23,7 @@ df_model <- bind_rows(df_model,df_model_allECO_CLIs)
 fun_compute_correlation_univ <- function(df,indicator){
   
   if(indicator == "abundance"){
-    var_to_keep = "NBINDIV"
-  }
+    var_to_keep = "NBINDIV"   }
   #SPEARMANS CORRELATION
   func <- function(x){
     df2 <- df %>% dplyr::select(var_to_keep,!!x)  #,ID_SITE
@@ -36,13 +32,9 @@ fun_compute_correlation_univ <- function(df,indicator){
   }
   
   possible_a <- possibly(func, otherwise = NA_real_)
-  
   spearman_univs <- furrr::future_map(colnames(df[5:ncol(df)]), possible_a)
-  
   spearman_univs <- do.call(rbind.data.frame, spearman_univs)
-  
   spearman_univs$ECO_CLI <- unique(df$ECO_CLI)
-  
   return(spearman_univs)
 }
 
@@ -136,5 +128,5 @@ plots_univ_spearman_temporal_mf <- univ_spearman_temporal_mf %>%
 
 #"FRANCE", "Continental", "Mediterranean" ,"Atlantic","Alpine"
 
-p_meteo_abundance <- patchwork::wrap_plots(plots_univ_spearman_temporal_mf$univ_temporal[1:5], ncol = 1, nrow = 5)
+p_meteo_abundance_after_france <- patchwork::wrap_plots(plots_univ_spearman_temporal_mf$univ_temporal[1:5], ncol = 1, nrow = 5)
 
