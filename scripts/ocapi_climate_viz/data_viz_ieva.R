@@ -4,12 +4,14 @@ library(lubridate)
 
 
 ##LOADING DATA
-dd <- read.fst("./covariates_dict.fst")
+dd <- read.fst("../../covariates_dict.fst")
 
-culdata<- read.csv("../2025_ieva_culicoides/data/culicoides_df.csv", row.names =NULL)%>%
+culdata<- read.csv("../../data/culicoides_df_fixed.csv", row.names =NULL)%>%
   select(-X)
-
-meteo <- read.csv("../2025_ieva_culicoides/data/meteo_df.csv") %>%
+culdata1 <- culdata %>%
+  filter(ID_SITE=="01PL1")
+  
+meteo <- read.csv("../../data/meteo_df.csv") %>%
   select(-CLC,-NBPARE, -NBFEMELLES, -BOV, -EQU, -BETAIL, -OVI, -CAP, -SURF_CANT, -longitude, -latitude)
 
 

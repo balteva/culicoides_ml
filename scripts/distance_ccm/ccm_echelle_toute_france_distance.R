@@ -2,9 +2,9 @@ library(tidyverse)
 library(furrr)
 library(patchwork)
 library(correlation)
+library(ggplot2)
 
-
-df_model <- read.csv(file.path("../../data","df_to_model.csv")) %>%
+df_model <- read.csv(file.path("../../data","df_to_model_fixed_obscot.csv")) %>%
   group_by(date) %>% 
   summarise_at(vars(NBINDIV:EVI_5_6), mean, na.rm = TRUE)
 ########################
@@ -69,7 +69,6 @@ corr_univ_abundance <- df_model %>%
   as.tibble() %>%
   mutate(indicator = "abundance") %>%
   mutate(r = ifelse(r<0,0,r))
-
 
 
 
@@ -153,4 +152,40 @@ plots_univ_spearman_temporal_mf <- univ_spearman_temporal_mf %>%
 # in the plots below, each row represents one eco-climatic zone (the first row is for whole France) "FRANCE", "Continental", "Mediterranean" ,"Atlantic","Alpine"
 
 p_meteo_presence <- patchwork::wrap_plots(plots_univ_spearman_temporal_mf$univ_temporal[1], ncol = 1  , nrow = 1)
+p_meteo_presence + plot_annotation(title="Distance CCM for Presence/Absence (France)",
+                                    theme = theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14)))
+
 p_meteo_abundance <- patchwork::wrap_plots(plots_univ_spearman_temporal_mf$univ_temporal[2], ncol = 1  , nrow = 1)
+p_meteo_abundance + plot_annotation(title="Distance CCM for Abundance (France)",
+                                   theme = theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14)))
+
+
+
+univ_spearman_temporal_mf_test <- corr_univ_presence %>%
+  filter(!is.na(Parameter1),!is.na(Parameter2)) %>%
+  mutate(var = sub('\\_.*', '', Parameter2)) %>%
+  mutate(label = case_when(var == "RR" ~ "Rainfall",
+                           var == "RRMAX" ~ "Maximum rainfall ",
+                           var == "TN" ~ "Minimum temperature",
+                           var == "TX" ~ "Maximum temperature",
+                           var == "TM" ~ "Average temperature",
+                           var == "UM" ~ "Relative humidity",
+                           var == "TPS" ~ "Soil Temperature",
+                           var == "QQ" ~ "Solar radiation",
+                           var == "SWV" ~ "Water volume soil",
+                           var == "PP" ~ "Photoperiod",
+                           var == "FG" ~ "Wind speed",
+                           var == "NDVI" ~ "NDVI",
+                           var == "EVI" ~ "EVI")) %>%
+  mutate(time_lag_1 = as.numeric(sub('.*\\_', '', Parameter2)), time_lag_2 = as.numeric(stringr::str_match( Parameter2, '([^_]+)(?:_[^_]+){1}$')[,2])) %>%
+  arrange(var, indicator, time_lag_1, time_lag_2) %>%
+  rename(correlation = r) %>%
+  mutate(correlation =ifelse(correlation >= 0.2, correlation, NA))%>%
+  mutate(correlation = ifelse(p <= 0.1,correlation,NA)) %>%
+  mutate(choose = ifelse(correlation >= correlation*0.9, "YES", NA))%>%
+  mutate(time_lag_1=as.numeric(time_lag_1)+1, time_lag_2=as.numeric(time_lag_2)+1 )
+write.csv(univ_spearman_temporal_mf_test, "../../corr_climatic_presence_obscot.csv")
+
+
+
+write.csv(corr_univ_abundance, "../../corr_climatic_abundance.csv")

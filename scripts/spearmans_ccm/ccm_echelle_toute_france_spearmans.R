@@ -4,7 +4,7 @@ library(patchwork)
 library(correlation)
 
 
-df_model <- read.csv(file.path("../../data","df_to_model.csv")) %>%
+df_model <- read.csv(file.path("../../data","df_to_model_fixed_obscot.csv")) %>%
   group_by(date) %>% 
   summarise_at(vars(NBINDIV:EVI_5_6), mean, na.rm = TRUE)
 ########################
@@ -164,4 +164,10 @@ plots_univ_spearman_temporal_mf <- univ_spearman_temporal_mf %>%
 
 
 p_meteo_presence <- patchwork::wrap_plots(plots_univ_spearman_temporal_mf$univ_temporal[1], ncol = 1  , nrow = 1)
+p_meteo_presence + plot_annotation(title="Spearman's CCM for Presence/Absence (France)",
+                                   theme = theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14)))
+
 p_meteo_abundance <- patchwork::wrap_plots(plots_univ_spearman_temporal_mf$univ_temporal[2], ncol = 1  , nrow = 1)
+p_meteo_abundance + plot_annotation(title="Spearman's CCM for Abundance (France)",
+                                    theme = theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14)))
+
