@@ -4,7 +4,8 @@ library(patchwork)
 library(precrec) 
 library(lubridate)
 
-
+#install.packages("hrbrthemes")
+library(hrbrthemes)
 #forgot to add eco_cli column, doing it now
 
 grid <- read.csv("../../data/culicoides_point_locations_grid_150_150.csv")%>%
@@ -51,7 +52,7 @@ plot_eval_abundance_model <- df_cv_abundance_LLO %>%
   theme(legend.position="bottom") + 
   ggtitle('Abundance models : observed vs. predicted values (LLO CV)')
 
-ggsave(filename = "C:/Users/ibalt/OneDrive/Desktop/uni/M2 stage/Cullicoides_data/CIRAD/culicoides_ml/multivariate_anal/abundance_results/abundance_evaluation_LLO.pdf",plot =plot_eval_abundance_model, device = "pdf", width = 11, height = 8) ## to save
+#ggsave(filename = "C:/Users/ibalt/OneDrive/Desktop/uni/M2 stage/Cullicoides_data/CIRAD/culicoides_ml/multivariate_anal/abundance_results/abundance_evaluation_LLO.pdf",plot =plot_eval_abundance_model, device = "pdf", width = 11, height = 8) ## to save
 ####################### raw plots below
 
 
@@ -88,24 +89,26 @@ plot_eval_abundance_model <- df_fin_cv %>%
   theme(legend.position="bottom") + 
   ggtitle('Abundance models : observed vs. predicted values with LLO or LTO CV')
 
-
+####################### raw plots below
 #### Second step: Model validation plots: visually with the RMSE
 
-df_cv_abundance2 <- df_cv_abundance %>% ## separation of prediction in different groups according to the number predicted to better wizualisation
-  mutate(obs = exp(obs)) %>%
-  mutate(pred = exp(pred)) %>%
+df_cv_abundance2 <- df_cv_abundance_LLO %>% ## separation of prediction in different groups according to the number predicted to better wizualisation
+   mutate(obs = exp(obs)) %>%
+   mutate(pred = exp(pred)) %>%
   mutate(rep = abs(obs - pred)/obs) %>%
   mutate(residuals = obs - pred) %>% 
-  mutate(groups = case_when(
-    obs>=1 & obs<=3 ~ "1-3",
-    obs>3 & obs<=10 ~ "4-10",
-    obs>10 & obs<=20 ~ "11-20",
-    obs>20 ~ ">20"
-  )) %>%
-  mutate(groups = fct_relevel(groups, c("1-3","4-10","11-20",">20")))
+  mutate(year = year(as.Date(DATE)))
+  # mutate(groups = case_when(
+  #   obs>=1 & obs<=10 ~ "1-10",
+  #   obs>10 & obs<=20 ~ "10-20",
+  #   obs>20 & obs<=30 ~ "20-30",
+  #   obs>30 & obs<=100 ~ "30-100",
+  #   obs>100 & obs<=200~ "100-200",
+  #   obs>200 ~ ">200")) %>%
+  # mutate(groups = fct_relevel(groups, c("1-10","10-20","20-30","30-100","100-200", ">200")))
 
 df_metrics_perf <- df_cv_abundance2 %>% ## to evaluate different type of metrics
-  group_by(groups) %>%
+  group_by(year, ECO_CLI) %>%
   summarise(mae = round(MLmetrics::MAE(y_true = obs ,y_pred = pred),2),
             mse =  round(MLmetrics::MSE(y_true = obs ,y_pred = pred),2),
             rmse =  round(MLmetrics::RMSE(y_true = obs ,y_pred = pred),2),
@@ -116,27 +119,29 @@ df_metrics_perf <- df_cv_abundance2 %>% ## to evaluate different type of metrics
 
 ## To represent visually the RMSE according to the different category of prediction 
 plot_validation_abundance <- ggplot() + 
-  geom_violin(data = df_cv_abundance2, aes(x=groups , y=residuals)) + 
-  stat_summary(data = df_cv_abundance2, aes(x=groups , y=residuals), fun=median, geom="point", size=2, color="black") +
-  theme_bw() + 
+  geom_violin(data = df_cv_abundance2, aes(x=ECO_CLI , y=residuals)) + 
+  stat_summary(data = df_cv_abundance2, aes(x=ECO_CLI , y=residuals), fun=median, geom="point", size=2, color="black") +
+  theme_minimal() + 
+  facet_wrap(~year, scales="free_y")+
   xlab("Observed counts") + 
-  ylab("Residuals (obs - pred)") + 
+  ylab("Residuals (obs - pred) in log10 ") + 
   geom_label(data = df_metrics_perf,
              size = 2.5,
-             mapping = aes(x = groups, y = max(df_cv_abundance2$residuals,na.rm = T), label = paste0('RMSE = ',rmse,'\nn = ',n),
+             mapping = aes(x = ECO_CLI, y = max(df_cv_abundance2$residuals,na.rm = T), label = paste0('RMSE = ',rmse,'\nn = ',n),
                            vjust = 1)) +
-  ggtitle("Abundance model: RMSE by count class") + 
+  scale_y_log10() +
+  ggtitle("Abundance model: RMSE by year (LLO CV)") + 
   geom_hline(yintercept=0, linetype="dashed") + 
   theme(axis.title.x = element_text(size = 8),
         axis.title.y = element_text(size = 8))
 
-ggsave(filename = "02_Data/processed_data/plots/modelling_adults_abundance/abundance_validation.pdf",plot =plot_validation_abundance, device = "pdf", width = 11, height = 8) ## predictions
+#ggsave(filename = "02_Data/processed_data/plots/modelling_adults_abundance/abundance_validation.pdf",plot =plot_validation_abundance, device = "pdf", width = 11, height = 8) ## predictions
 
 #### Third step: VIP  
 
-model = multiv_model_abundance$model
-df = multiv_model_abundance$df_mod
-df_cv <-  multiv_model_abundance$df_cv
+model = multiv_model_abundance_LLO$model
+df = multiv_model_abundance_LLO$df_mod
+df_cv <-  multiv_model_abundance_LLO$df_cv
 
 ## To select the importance of each variable from the model and to transform in data frame
 imp <- model$finalModel$variable.importance
@@ -147,16 +152,12 @@ imp$var <- rownames(imp)
 imp <- imp %>%
   dplyr::rename(importance = imp) %>%
   mutate(label = forcats::fct_reorder(var, importance)) %>%
-  arrange(-importance) %>% 
-  mutate(type = case_when(var %in% c("RFDode_6_6","GDDjour_1_1","WINDmf_0_1") ~ "Meteorological",
-                          var %in% c("RHMEAN_collection","TMAX_collection") ~ "Micro-climatic",
-                          var %in% c("lsm_c_pland_LCG_20_12","lsm_c_pland_LCG_50_13") ~ "Landscape - vegetation",
-                          var %in% c("lsm_c_pland_LCG_100_10") ~ "Landscape - others",
-                          var%in%c("NOX_0_0")~"Polluants"))
+  arrange(-importance)
+
 
 
 ## To plot the importance of variables
-plot_imp_abundance <- ggplot(imp, aes(x = importance , y = label, label = label, fill = type)) +
+plot_imp_abundance <- ggplot(imp, aes(x = importance , y = label, label = label, fill = var)) +
   geom_bar(position = 'dodge', stat="identity", width = 0.6) + 
   theme_bw() + 
   geom_text(size=3,position = position_dodge(0.9),hjust=-0.1,label.padding = unit(0.2, "lines")) +
@@ -169,7 +170,7 @@ plot_imp_abundance <- ggplot(imp, aes(x = importance , y = label, label = label,
   ylab("") + 
   xlab("") +
   xlim(NA,max(imp$importance, na.rm = T) + max(imp$importance, na.rm = T)*2.5) +
-  labs(title = "Abundance model : VIP")
+  labs(title = "Abundance model LLO CV: VIP")
 
 ggsave(filename = "02_Data/processed_data/plots/modelling_adults_abundance/abundance_VIP.pdf",plot =plot_imp_abundance, device = "pdf", width = 11, height = 8) ## To save
 
@@ -191,8 +192,8 @@ for(i in 1:length(imp$var)){
   dat1 <- ggplot_build(p)$data[[1]]
   dat2 <- ggplot_build(p)$data[[2]]
   pdps[[i]] <- ggplot() + 
-    geom_line(data = dat1, aes(x = x, y = exp(y)), size = 0.3, colour = "black", alpha = 0.4) +   ## smooth the observed data
-    geom_line(data = dat2, aes(x = x, y = exp(y)), size = 0.5, colour = "#009E73") +  # smooth the prediction data
+    geom_line(data = dat1, aes(x = x, y = y), size = 0.3, colour = "black", alpha = 0.4) +   ## smooth the observed data
+    geom_line(data = dat2, aes(x = x, y = y), size = 0.5, colour = "#009E73") +  # smooth the prediction data
     geom_rug(data = df, aes_string(x = imp$var[i]), sides="b", length = unit(0.05, "npc")) + 
     theme_bw() + 
     xlab(imp$var[i]) + 
