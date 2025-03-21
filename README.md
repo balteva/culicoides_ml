@@ -2,32 +2,36 @@
 
 # 2025 Internship subject: **Spatio-temporal modeling of Culidcoides populations in France using Machine Learning**
 
-## Scripts
-- `covariates_hist_timeseries.R`
-    **Rstudio script for primary data preprocessing and some basic visualisation such as histograms and timeseries**
-- `covariates_boxplots.R`
-    **Rstudio script for boxplots**
-- `spatial_covariates.R`
-    **Rstudio script for spatial data visualisation + some boxplots (need to transfer them to covariates_jeuxdedonnees script)**
+## INFORMATION
+- `/updated_scripts`
+    **Directory containing UPDATED work: scripts, model outputs and interpretation**
+- `/scripts`
+    **Directory containing NOT UPDATED scripts for data preparation, Cross-Correlation Mapping and multivariate analysis**
+- `/datapaper_viz`
+    **Directory containing ocapi database basic visualizations (histograms, boxplots)**
 ## Description
-
+The primary goal is to create presence and absence models with two uses:
+1) Prediction of Culicoides populations in France in the past, present and future using available climatic data
+2) Interpretation and explanation of the model outputs : why were specific areas experiencing high biting midge abundance? Which factors lead to an earlier start of the *Culicoides sp.* activity season?
 ## Visuals
-**<p align="center"> <mark>1. Boxplots</mark>** </p>
-***(NOTE: outlier values are excluded for all boxplots and histograms)***
-        Culidoides spp. counts per trap per night 2009-2012 
-![*Culicoides spp.* counts per trap per night 2009-2012](./Visualised_Data_basic/Boxplots/boxplot_pertrap_pernight_simple_years.jpeg)
+**<p align="center"> <mark>1. Presence model output</mark>** </p>
+
+        C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
+![C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation](./updated_scripts/interpretation/model/presence/binary_LTO.jpeg)
 
         With Ecolimatic zones
-![*Culicoides spp.* counts per trap per night 2009-2012 with Ecolimatic zones](./Visualised_Data_basic/Boxplots/boxplot_pertrap_pernight_simple_years_eco_cli.jpeg)
------------------------------------
-        Culicoides spp. counts per trap per night for each month
-![*Culicoides spp.* counts per trap per night for each month](./Visualised_Data_basic/Boxplots/boxplot_pertrap_pernight_simple_months_years.jpeg)
+ C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
+![C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation for Eco Zones](./updated_scripts/interpretation/model/presence/eco_cli_year/binary_LTO_ecocli.jpeg)
 
-        With Ecoclimatic zones
-![*Culicoides spp.* counts per trap per night for each month with Ecoclimatic zones](./Visualised_Data_basic/Boxplots/culicoides_boxplot_all_species_separate_eco_cli_years.jpeg)
 -----------------------------------
-**<p align="center"> <mark>2. Histograms</mark>** </p>
+         C. obsoletus/scoticus predicted presence probability 2009-2012 with LTO CV
+![C. obsoletus/scoticus predicted presence probability 2009-2012 with LTO CV](./updated_scripts/interpretation/model/presence/presence_LTO_probability.jpeg)
 
+        Comparing Leave-Location-Out and Leave-Time-Out CV predictions
+![Comparing Leave-Location-Out and Leave-Time-Out CV predictions](./updated_scripts/interpretation/model/presence/LTTO_probability.jpeg)
+-----------------------------------
+**<p align="center"> <mark>2. Evaluation </mark>** </p>
+<!-- 
         Histogram of Culicoides spp. counts per trap per night 2009-2012 with mean and median
 ![Histogram of *Culicoides spp* counts per trap per night 2009-2012 with mean and median](./Visualised_Data_basic/Histograms/hist_pertrap_pernight_with_stats_cornflower_2009_2012.jpeg)
 
@@ -60,7 +64,7 @@
          Barcharts with Ecoclimatic zone
 ![Barchart timeseries of standardized counts of *Culidoides spp.* per trap per each sampling day (month's mean) with Ecoclimatic zones](./Visualised_Data_basic/Spatio-temporal/temporal_month_avg_per_trap_ECO_CLI_bars.jpeg)
 -----------------------------------
-**<p align="center"> <mark>4. Maps</mark>** </p>
+**<p align="center"> <mark>4. Maps</mark>** </p> -->
 
         Culicoides counts across France during different years visualised in a map
 ![Culicoides counts across France during different years visualised in a map](./Visualised_Data_basic/Spatio-temporal/france2009_2012_maps_page-0001.jpg)
