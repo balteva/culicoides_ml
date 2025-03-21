@@ -17,18 +17,18 @@ The primary goal is to create presence and absence models with two uses:
 **<p align="center"> <mark>1. Presence model output</mark>** </p>
 
         C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
-![C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation](./updated_scripts/interpretation/model/presence/binary_LTO.jpeg)
+![C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation](updated_scripts/interpretation/model/presence/binary_LTO.jpeg)
 
         With Ecolimatic zones
  C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
-![C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation for Eco Zones](./updated_scripts/interpretation/model/presence/eco_cli_year/binary_LTO_ecocli.jpeg)
+![C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation for Eco Zones](updated_scripts/interpretation/model/presence/eco_cli_year/binary_LTO_ecocli.jpeg)
 
 -----------------------------------
          C. obsoletus/scoticus predicted presence probability 2009-2012 with LTO CV
-![C. obsoletus/scoticus predicted presence probability 2009-2012 with LTO CV](./updated_scripts/interpretation/model/presence/presence_LTO_probability.jpeg)
+![C. obsoletus/scoticus predicted presence probability 2009-2012 with LTO CV](updated_scripts/interpretation/model/presence/presence_LTO_probability.jpeg)
 
         Comparing Leave-Location-Out and Leave-Time-Out CV predictions
-![Comparing Leave-Location-Out and Leave-Time-Out CV predictions](./updated_scripts/interpretation/model/presence/LTTO_probability.jpeg)
+![Comparing Leave-Location-Out and Leave-Time-Out CV predictions](updated_scripts/interpretation/model/presence/LTTO_probability.jpeg)
 -----------------------------------
 **<p align="center"> <mark>2. Evaluation </mark>** </p>
 <!-- 
