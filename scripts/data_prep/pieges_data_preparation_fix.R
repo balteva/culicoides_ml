@@ -1,7 +1,7 @@
 library(tidyverse)
 library(fst)
 
-load("../../database_ocapi_09_12_survFR.rda")
+load("../../data/database_ocapi_09_12_survFR.rda")
 database_ocapi <- database_ocapi %>%
   mutate(DATEFIN = case_when(
     DATEFIN == "0000-00-00" ~ "2012-08-17",TRUE ~ DATEFIN),
@@ -12,7 +12,7 @@ database_ocapi <- database_ocapi %>%
 
 
 ecocli <-  read_delim(file.path("../../data","meteo_df.csv")) %>%
-  dplyr::select(ID_SITE,ECO_CLI) %>%#adding altitude and corine land cover data to my last df for glmm
+  dplyr::select(ID_SITE,ECO_CLI, SURF_CANT) %>%#adding altitude and corine land cover data to my last df for glmm
   distinct() #from the meteo df im just extracting the ecoclim zone because ocapi doesnt have it
 
 database_ocapi_prepared <- database_ocapi %>%
@@ -58,7 +58,7 @@ write.csv(database_ocapi_prepared,  file.path("../../","culicoides_df_fixed_obsc
  #keeping the rest of the results unchanged
 ####extracting same df with absolutely every paysagere and microclimate var
 ecocli <-  read_delim(file.path("../../data","meteo_df.csv")) %>%
-  dplyr::select(ID_SITE,ECO_CLI, CLC,ALT, OVI, EQU, BETAIL, CAP, BOV) %>%#adding altitude and corine land cover data to my last df for glmm
+  dplyr::select(ID_SITE,ECO_CLI, CLC,ALT, OVI, EQU, BETAIL, CAP, BOV, SURF_CANT) %>%#adding altitude and corine land cover data to my last df for glmm
   distinct() #from the meteo df im just extracting the ecoclim zone because ocapi doesnt have it
 
 
@@ -75,4 +75,4 @@ database_ocapi_paysagere_climat <- database_ocapi %>%
   filter(!is.na(DATE))
 
 colnames(database_ocapi_paysagere_climat)
-write.csv(database_ocapi_paysagere_climat,  file.path("../../","ocapi_paysagere_micro_climat_obscot.csv"))
+write.csv(database_ocapi_paysagere_climat,  file.path("../../data/obscot","ocapi_paysagere_micro_climat_obscot_tempfin.csv"))

@@ -1,0 +1,465 @@
+
+--------------------------------------------
+Fisher's Exact test between ELEV_OVIN and ELEV_CAPRIN 
+
+	Fisher's Exact Test for Count Data
+
+data:  table_temp
+p-value < 2.2e-16
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 2.893103 3.873333
+sample estimates:
+odds ratio 
+  3.347989 
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_OVIN and ACTIV_VIANDE 
+
+	Fisher's Exact Test for Count Data
+
+data:  table_temp
+p-value < 2.2e-16
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 4.475612 5.634641
+sample estimates:
+odds ratio 
+  5.017708 
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_OVIN and ANIMAUXFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_OVIN and VENTFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_OVIN and VENTDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_OVIN and PLUIEFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.09245
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_OVIN and PLUIEDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.2114
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_OVIN and OUVERTURE_BAT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_OVIN and CLC_level2 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_CAPRIN and ACTIV_VIANDE 
+
+	Fisher's Exact Test for Count Data
+
+data:  table_temp
+p-value = 8.66e-11
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.5440596 0.7248498
+sample estimates:
+odds ratio 
+ 0.6281239 
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_CAPRIN and ANIMAUXFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_CAPRIN and VENTFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_CAPRIN and VENTDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_CAPRIN and PLUIEFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0009995
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_CAPRIN and PLUIEDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.03048
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_CAPRIN and OUVERTURE_BAT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ELEV_CAPRIN and CLC_level2 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ACTIV_VIANDE and ANIMAUXFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ACTIV_VIANDE and VENTFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.2519
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ACTIV_VIANDE and VENTDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.1029
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ACTIV_VIANDE and PLUIEFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.005497
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ACTIV_VIANDE and PLUIEDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.1449
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ACTIV_VIANDE and OUVERTURE_BAT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ACTIV_VIANDE and CLC_level2 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ANIMAUXFIN and VENTFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.02899
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ANIMAUXFIN and VENTDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.08046
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ANIMAUXFIN and PLUIEFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ANIMAUXFIN and PLUIEDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ANIMAUXFIN and OUVERTURE_BAT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between ANIMAUXFIN and CLC_level2 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between VENTFIN and VENTDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between VENTFIN and PLUIEFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between VENTFIN and PLUIEDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between VENTFIN and OUVERTURE_BAT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between VENTFIN and CLC_level2 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between VENTDEBUT and PLUIEFIN 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between VENTDEBUT and PLUIEDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between VENTDEBUT and OUVERTURE_BAT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.002499
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between VENTDEBUT and CLC_level2 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between PLUIEFIN and PLUIEDEBUT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between PLUIEFIN and OUVERTURE_BAT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.01749
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between PLUIEFIN and CLC_level2 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.02999
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between PLUIEDEBUT and OUVERTURE_BAT 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.01199
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between PLUIEDEBUT and CLC_level2 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.05597
+alternative hypothesis: two.sided
+
+
+--------------------------------------------
+Fisher's Exact test between OUVERTURE_BAT and CLC_level2 
+
+	Fisher's Exact Test for Count Data with simulated p-value (based on 2000 replicates)
+
+data:  table_temp
+p-value = 0.0004998
+alternative hypothesis: two.sided
+

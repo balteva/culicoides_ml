@@ -6,7 +6,8 @@ library(ggplot2)
 
 df_model <- read.csv(file.path("../../data","df_to_model_fixed_obscot.csv")) %>%
   group_by(date) %>% 
-  summarise_at(vars(NBINDIV:EVI_5_6), mean, na.rm = TRUE)
+  summarise_at(vars(NBINDIV:EVI_5_6), mean, na.rm = TRUE) %>% 
+  ungroup()
 ########################
 ## modélisation bivariée
 ########################

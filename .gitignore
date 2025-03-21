@@ -2,3 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+modeling_with_errors/*
+scripts/*
+updated_scripts/data/*.csv

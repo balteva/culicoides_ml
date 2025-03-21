@@ -142,8 +142,49 @@ theme(plot.title = element_text(hjust = 0.5))+
   theme_minimal()
 dev.off()
 
+#####################################
+library(tidyverse)
+library(fst)
+
+load("../../data/database_ocapi_09_12_survFR.rda")
+database_ocapi <- database_ocapi %>%
+  mutate(DATEFIN = case_when(
+    DATEFIN == "0000-00-00" ~ "2012-08-17",TRUE ~ DATEFIN),
+    ESPECE = case_when(
+      ESPECE == "scoticus s.st" ~ "obsoletus/scoticus", TRUE ~ ESPECE),
+    ESPECE = case_when(
+      ESPECE == "obsoletus s.st" ~ "obsoletus/scoticus", TRUE ~ ESPECE))
 
 
+ecocli <-  read_delim(file.path("../../data","meteo_df.csv")) %>%
+  dplyr::select(ID_SITE,ECO_CLI) %>%#adding altitude and corine land cover data to my last df for glmm
+  distinct() #from the meteo df im just extracting the ecoclim zone because ocapi doesnt have it
+###################################march 13
+obscot <- database_ocapi %>%
+  dplyr::select(ID_SITE, COMMUNELOC, DATEFIN, NBINDIV, ESPECE) %>%
+  filter(ESPECE=="obsoletus/scoticus") %>%
+  group_by(ID_SITE, COMMUNELOC, DATEFIN) %>%
+  summarise(NBINDIV = sum(NBINDIV)) %>%
+  ungroup() %>%
+  left_join(ecocli) %>%
+  relocate(ECO_CLI, .after = ID_SITE) %>%
+  rename(DATE = DATEFIN) %>%
+  filter(!is.na(DATE))
 
 
+obscot_plot <- obscot%>%
+  group_by(ECO_CLI,DATE)%>%
+  summarise(NBINDIV=mean(NBINDIV))%>%
+  mutate(year=year(as.Date(DATE)), week=week(as.Date(DATE)))
 
+
+ggplot(obscot_plot, aes(x=week, y=NBINDIV,color=ECO_CLI)) +
+  geom_line(linewidth=1) +
+  geom_point(color="grey40")+
+  labs(title = "Average Obsoletus/Scoticus counts per trap in different ecoclimatic zones",
+       x = "week",
+       y = "avg indiv.counted") +
+  guides(color="none")+
+  facet_grid(~ECO_CLI~year, scale="free_y")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5, face="bold"))
