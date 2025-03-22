@@ -28,7 +28,7 @@ The primary goal is to create presence and absence models with two uses:
 ![presence probability LTO](./updated_scripts/plots/interpretation/model/presence/presence_LTO_probability.jpeg)
 
         Comparing Leave-Location-Out and Leave-Time-Out CV predictions
-![presence probabilitY LTO vs LLO](./updated_scripts/plots/interpretation/model/presence/LTTO_probability.jpeg)
+![presence probabilitY LTO vs LLO](./updated_scripts/plots/interpretation/model/presence/LLTO_probability.jpeg)
 -----------------------------------
 **<p align="center"> <mark>2. Evaluation </mark>** </p>
 <!-- 
