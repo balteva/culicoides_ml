@@ -17,8 +17,7 @@ The primary goal is to create presence and absence models with two uses:
 **<p align="center"> <mark>1. Presence model output</mark>** </p>
 
         C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
-![binary presence LTO output]
-(https://gitlab.cirad.fr/astre/culicoides_ml/-/blob/master/updated_scripts/plots/interpretation/model/presence/binary_LTO.jpeg)
+![binary presence LTO output](./-/blob/master/updated_scripts/plots/interpretation/model/presence/binary_LTO.jpeg)
         With Ecolimatic zones
  C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
 ![binary presence LTO with ecoclimatic zones](./updated_scripts/plots/interpretation/model/presence/eco_cli_year/binary_LTO_ecocli.jpeg)
