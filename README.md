@@ -17,18 +17,18 @@ The primary goal is to create presence and absence models with two uses:
 **<p align="center"> <mark>1. Presence model output</mark>** </p>
 
         C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
-![binary presence LTO output](/https://gitlab.cirad.fr/astre/culicoides_ml/updated_scripts/interpretation/plots/model/presence/binary_LTO.jpeg)
+![binary presence LTO output](./updated_scripts/interpretation/plots/model/presence/binary_LTO.jpeg)
 
         With Ecolimatic zones
  C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
-![binary presence LTO with ecoclimatic zones](https://gitlab.cirad.fr/astre/culicoides_ml/updated_scripts/plots/interpretation/model/presence/eco_cli_year/binary_LTO_ecocli.jpeg)
+![binary presence LTO with ecoclimatic zones](./updated_scripts/plots/interpretation/model/presence/eco_cli_year/binary_LTO_ecocli.jpeg)
 
 -----------------------------------
          C. obsoletus/scoticus predicted presence probability 2009-2012 with LTO CV
-![presence probability LTO](https://gitlab.cirad.fr/astre/culicoides_ml/updated_scripts/plots/interpretation/model/presence/presence_LTO_probability.jpeg)
+![presence probability LTO](./updated_scripts/plots/interpretation/model/presence/presence_LTO_probability.jpeg)
 
         Comparing Leave-Location-Out and Leave-Time-Out CV predictions
-![presence probabilitY LTO vs LLO](https://gitlab.cirad.fr/astre/culicoides_ml/updated_scripts/plots/interpretation/model/presence/LTTO_probability.jpeg)
+![presence probabilitY LTO vs LLO](./updated_scripts/plots/interpretation/model/presence/LTTO_probability.jpeg)
 -----------------------------------
 **<p align="center"> <mark>2. Evaluation </mark>** </p>
 <!-- 
