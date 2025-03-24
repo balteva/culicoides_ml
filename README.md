@@ -16,12 +16,44 @@ The primary goal is to create presence and absence models with two uses:
 -   Which factors lead to an earlier start of the *Culicoides sp.* activity season? 
 -   Which factors contribute to increased *Culicoides sp.* abundance?
 
+## Where does the data come from?
+**During 2009 - 2012, biting midges, the blue tongue and Epizootic hemorrhagic disease vector species, were captured using UV light traps in metropolitan France. 
+- 1-2 traps per department
+- Around 160 traps deployed each year
+- A total of 14895 trapping sessions 
+- Species, landscape and microclimatic data collected
+
+**Map of biting midge trap locations and Ecoclimatic Zones**
+![France Traps with departments and scale](./updated_scripts/plots/qgis/France_EcoCli_Departments_Traps.png)
+
+**For model construction with spatial cross-validation, the data was separated into cells with a 150 km x 150 km grid.**
+**Map of biting midge trap locations and Ecoclimatic Zones**
+![France grid](./updated_scripts/plots/qgis/grid_map_france.png)
+
 ## VARIABLE SELECTION
-**<p align="center">Bivariate and Multivariate Analysis** </p>
+**<p align="center"> <mark>1. Meteorological data </mark>** </p>
 
+**Presence/Absence model Cross-Correlation Map (CCM) for distance**
+Brighter red values indicate higher correlation.
+Lighter values indicate weak correlation.
+Grey values indicate No correlation.
+Red bordered squares are the most correlated values, whereas black bordered squares are at least 90% correlated as the highest correlated value.
+*NOTE : Distance CCM indicate the strength of the association, but not the direction!*
+*Direction of the association can be better indicated using Spearman's correlation* [Not included here.]
+![Distance correlation presence](./updated_scripts/plots/var_selection/presence/france_presence_distance_ccm.jpeg)
 
+Local landscape and microclimatic variables were selected using general linear mixed models, with a traditional significance threshold of  p  < 0.05.
 
+**Potential features for the Presence/Absence model which are significantly associated with the response (presence)**
 
+![Distance correlation presence](./updated_scripts/plots/var_selection/presence/presence_vs_numerical_vars.jpeg)
+*However, using a heatmap, we can see that a lot of them are highly correlated between each other:*
+![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/presence_var_correlation_heatmap.jpeg)
+
+Final variable selection was done selecting biologically important features with < 0.7 correlation between in a pairwise comparison:
+![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/selected_presence_vars_heatmap.jpeg)
+
+**Categorical features (wind strength, type of farm) were tested for correlation with Fisher's Exact test and Cramer's V, investigating the strength of their association between each other [Not included here.]
 
 ## VISUALISATION
 **<p align="center"> <mark>1. Presence model output </mark>** </p>
