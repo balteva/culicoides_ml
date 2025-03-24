@@ -11,11 +11,11 @@ grid <- read.csv("../../qgis/culicoides_point_locations_grid_150_150.csv")%>%
   select(ID_SITE, ECO_CLI, Cell)
 
 #cv with location LLO
-multiv_model_presence_LLO <- readRDS("../../updated_scripts/models/RF_model_presence_LLO.rds")
+multiv_model_presence_LLO <- readRDS("./updated_scripts/models/RF_model_presence_LLO.rds")
 
 
 #CV with LTO
-multiv_model_presence_LTO <- readRDS("../../updated_scripts/models/RF_model_presence_LTO.rds")
+multiv_model_presence_LTO <- readRDS("./updated_scripts/models/RF_model_presence_LTO.rds")
 
 
 #results of LLO
@@ -230,7 +230,7 @@ library(pdp)
 ## To create a function which predicts the probability of presence according different variable values
 pred_wrapper_classif <- function(object, newdata) { 
   p <- predict(object, newdata = newdata, type ="prob")[,"Presence"] #object is fitted model, newdata is new predictor values (generated value range for feature)
-  c("avg" = mean(p))
+  return(c("avg" = mean(p)))
 }
 
 pdps <- list()
@@ -271,31 +271,79 @@ pred_ice<- function(object, newdata) {
       p <- predict(object, newdata = newdata, type ="prob")[,"Presence"] #object is fitted model, newdata is new predictor values (generated value range for feature)
     }
     
-    pdps_ice <- list()
+grid <- read.csv("../../qgis/culicoides_point_locations_grid_150_150.csv")%>%
+  select(ID_SITE, ECO_CLI, Cell)
+eco_cli_colors <- c("Alpine" = "#D81B60",  "Atlantic" = "#1E88E5","Continental" = "#004D40",  "Mediterranean" = "#FFC107") # Vivid amber
+
+df_ids <- df %>%
+  rename(yhat.id = rowIndex)%>%
+  left_join(grid)%>%
+  select(c("yhat.id", "ECO_CLI", "year"))
+
+pdps_ice <- list()
+
+#functioning the function
+for(i in 1:length(imp$var)){
+  
+  pd <- pdp::partial(model, pred.var = imp$var[i], pred.fun = pred_ice, train = df) ## array that returns predictions of a variable in a model #train extracts the original training data
+  pd$yhat[which(pd$yhat<0)] <-0 #any neg values in pro st to 0 because they range [0;1]
+  pd <- pd %>%
+    group_by(yhat.id)%>%
+    mutate(yhat.centered = yhat-first(yhat)) #same concept but the predicted data after replacement with fixed feature values (with feature replacement)
+  
+  pd <- pd %>%
+    left_join(df_ids)
+  
+  if (!(imp$var[i] %in% categorical_vars)){
+    pdps_ice[[i]] <- ggplot(pd, aes_string(x=imp$var[i], y="yhat.centered", color= "ECO_CLI")) +
+      geom_line(aes(group = yhat.id), alpha = 0.7, linewidth=0.6) +
+      stat_summary(fun.y = mean, geom = "line", col = "red", size = 1) +
+      ylab("Change in Presence Prediction")+
+      theme_classic() +
+      scale_color_manual(values=eco_cli_colors) +
+      labs(color = "Ecoclimatic Zone") +  
+      guides(color = guide_legend(override.aes = list(linewidth = 2, alpha = 1)))  
     
-    for(i in 1:length(imp$var)){#looping over each variable
-      
-      pd <- pdp::partial(model, pred.var = imp$var[i], pred.fun = pred_ice, train = df) ## array that returns predictions of a variable in a model #train extracts the original training data
-      pd$yhat[which(pd$yhat<0)] <-0 #any neg values in pro st to 0 because they range [0;1]
-      pd <- pd %>%
-        group_by(yhat.id)%>%
-        mutate(yhat.centered = yhat-first(yhat)) #same concept but the predicted data after replacement with fixed feature values (with feature replacement)
-      
-      if (!(imp$var[i] %in% categorical_vars)){ ## doing this only for continuous variables
-        pdps_ice[[i]] <- ggplot(pd, aes_string(x=imp$var[i], y="yhat")) +#change to yhat.centered to center
-          geom_line(aes(group = yhat.id), alpha = 0.2) +
-          stat_summary(fun.y = mean, geom = "line", col = "red", size = 1)+
-          ylab("Change in Presence Prediction")+
-          theme_classic()
-      }}
+  }}
+
+plot_ice_presence <- patchwork::wrap_plots(pdps_ice) + 
+  plot_annotation(title = "Presence models : Individual Conditional Expectation (ICE) plots") +
+  plot_layout(guides = "collect")
+######### MEASURING FEATURE INTERACTIONS
+library(yaImpute)
+library(caret)
+library(data.table)
+## just a reminder of where i'm getting the data:
+# model <- multiv_model_presence_LLO$model #model details (mtrees, specificity, sensitivity)
+# df <- multiv_model_presence_LLO$df_mod #og dataframe
+# df_cv <-  multiv_model_presence_LLO$df_cv #og data frame with predictions
 
 
-plot_ice_presence <- patchwork::wrap_plots(pdps_ice) + plot_annotation(title = "Presence models : Individual Conditional Expectation (ICE) plots")
-#
-#########"
+data_only <- df %>% #making a df with only the predictors used in RF
+  select(-c("idpointdecapture", "ID_SITE", "DATE", "Cell", "year", "NBINDIV", "PRES_CUL", "rowIndex"))
+
+options(future.globals.maxSize = 2 * 1024 * 1024 * 1024)  # 2GB, computing interaction needs extra power
+
+mod <- Predictor$new(model, data = data_only, type = "prob", class = "Presence")#creates an object  holding the machine learning model and the data
+
+ia <- Interaction$new(mod) #interaction evaluation
+plot(ia) #visualising
+
+#calculating var1 x other vars interaction strength based on previous output
+Interaction$new(mod, feature = "ALT", grid.size = 30)
+
+ALT_int<-Interaction$new(mod, feature = "ALT", grid.size = 30)
+
+plot(ALT_int)
+
+
+
+
+
+
 ###investigate why this shit works and my approach didnt
 ## Define variables to analyze
-imp_new <- c("PP_1_5", "TX_0_4")  
+varpair <- c("BETAIL", "ALT")  
 
 ## Define function to predict probability of presence
 pred_wrapper_classif <- function(object, newdata) { 
@@ -304,26 +352,19 @@ pred_wrapper_classif <- function(object, newdata) {
 }
 
 ## Compute 2D Partial Dependence
-pd <- pdp::partial(
-  model, 
-  pred.var = imp_new,  # Use both variables together
-  pred.fun = pred_wrapper_classif, 
-  train = df,
-  grid.resolution = 20  # Adjust resolution for smoother visualization
-)
+pd <- pdp::partial(model, pred.var = varpair, pred.fun = pred_wrapper_classif, train = df) #,grid.resolution = 20  # Adjust resolution for smoother visualization
 
-## Ensure probabilities stay within [0,1]
-pd$yhat[pd$yhat < 0] <- 0 
 
-## Create 2D heatmap
-plot_pdp_2D <- ggplot(pd, aes(x = PP_1_5, y = TX_0_4, fill = yhat)) +
+pd$yhat[pd$yhat < 0] <- 0 #  probabilities stay within [0,1]
+
+plot_pdp_2D <- ggplot(pd, aes(x = BETAIL, y = ALT, fill = yhat)) +
   geom_tile() +
-  scale_fill_viridis_c(option = "plasma") +  # Better color scale
+  scale_fill_viridis_c(option = "magma") +  # Better color scale
   theme_minimal() +
   labs(
     title = "2D PDP for Presence Probability",
-    x = "PP_1_5",
-    y = "TX_0_4",
+    x = "BETAIL",
+    y = "ALT",
     fill = "Probability"
   )
 
