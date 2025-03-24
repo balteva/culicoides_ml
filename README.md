@@ -51,17 +51,27 @@ The primary goal is to create presence and absence models with two uses:
 
     Partial Dependence Plots (PDP).
 ![Presence PDPs)](./updated_scripts/plots/interpretation/model/presence/PDP_presence.jpeg)
-
+#ICE_presence_ecocli
 -----------------------------------
-**<p align="center"> <mark>3. Timeseries</mark>** </p>
-        Temporal changes of TOTAL daily counts of Culidoides spp. per each sampling day
-![Temporal changes of total daily counts of *Culidoides spp.* per each sampling day](./Visualised_Data_basic/Spatio-temporal/temporal_simple_cumulative.jpeg)
+**<p align="center"> <mark>3. Variable Interaction analysis</mark>** </p>
+    Centered Individual Conditional Expectation plots (ICE-c).\n
+    Displays how each prediction changes when varying one predictor while keeping all other features fixed.\n
+    Red line is the mean trend across all predictions.\n
+    By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.
+![ICE - centered with Ecoclim. zones)](./updated_scripts/plots/interpretation/model/presence/ICE_presence_ecocli.jpeg)
 
-        With Ecoclimatic Zones
-![Temporal changes of total daily counts of *Culicoides spp.* per each sampling day with Ecoclimatic zones](./Visualised_Data_basic/Spatio-temporal/temporal_changes_all_species.jpeg)
-----------------------------------
-        Temporal changes of mean daily counts of Culidoides spp. per trap per each sampling day
-![Temporal changes of mean daily counts of *Culidoides spp.* per trap per each sampling day](./Visualised_Data_basic/Spatio-temporal/temporal_simple_per_trap_per_day_mean.jpeg)
+        Feature interaction can be investigated through the H-statistic, which ranges from 0 - 1.
+        0 = no feature interaction; \n
+        1 = the prediction is a result only of the features interacting.
+        Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.
+![feature interaction](./updated_scripts/plots/interpretation/model/presence/feature_interaction_presence.jpeg)
+    
+        We can further investigate how much one specific variable (Altitude) interacts with all other features in a pairwise comparison
+![Altitude interaction](./updated_scripts/plots/interpretation/model/presence/altitude_feature_int.jpeg)
+
+        The specific relationship between two strongly interacting features can be visualised with a 2D Partial Dependence Plot:
+![2D PDP](./updated_scripts/plots/interpretation/model/presence/betail_altitude_pdp.jpeg)
+
 ----------------------------------
 **<p align="center">Various ways to present the same data** </p>
         Standardized counts of Culidoides spp. per trap per each sampling day (month's mean)
