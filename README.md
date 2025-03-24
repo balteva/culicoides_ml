@@ -9,36 +9,49 @@
     **Directory containing NOT UPDATED scripts for data preparation, Cross-Correlation Mapping and multivariate analysis**
 - `/datapaper_viz`
     **Directory containing ocapi database basic visualizations (histograms, boxplots)**
-## Description
+## DESCRIPTION
 The primary goal is to create presence and absence models with two uses:
 1) Prediction of Culicoides populations in France in the past, present and future using available climatic data
-2) Interpretation and explanation of the model outputs : why were specific areas experiencing high biting midge abundance? Which factors lead to an earlier start of the *Culicoides sp.* activity season?
-## Visuals
-**<p align="center"> <mark>1. Presence model output</mark>** </p>
+2) Interpretation and explanation of the model outputs : 
+-   Which factors lead to an earlier start of the *Culicoides sp.* activity season? 
+-   Which factors contribute to increased *Culicoides sp.* abundance?
+
+## VISUALISATION
+**<p align="center"> <mark>1. Presence model output </mark>** </p>
 
         C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
 ![binary presence LTO output](./updated_scripts/plots/interpretation/model/presence/binary_LTO.jpeg)
         With Ecolimatic zones
- C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
+        C. obsoletus/scoticus predicted vs observed presence 2009-2012 with Leave-Time-Out (LTO) Cross Validation
 ![binary presence LTO with ecoclimatic zones](./updated_scripts/plots/interpretation/model/presence/eco_cli_year/binary_LTO_ecocli.jpeg)
 
 -----------------------------------
          C. obsoletus/scoticus predicted presence probability 2009-2012 with LTO CV
 ![presence probability LTO](./updated_scripts/plots/interpretation/model/presence/presence_LTO_probability.jpeg)
 
-        Comparing Leave-Location-Out and Leave-Time-Out CV predictions
+        Comparing Leave-Location-Out and Leave-Time-Out CV predictions.
 ![presence probabilitY LTO vs LLO](./updated_scripts/plots/interpretation/model/presence/LLTO_probability.jpeg)
 -----------------------------------
-**<p align="center"> <mark>2. Evaluation </mark>** </p>
-<!-- 
-        Histogram of Culicoides spp. counts per trap per night 2009-2012 with mean and median
-![Histogram of *Culicoides spp* counts per trap per night 2009-2012 with mean and median](./Visualised_Data_basic/Histograms/hist_pertrap_pernight_with_stats_cornflower_2009_2012.jpeg)
+**<p align="center"> <mark>2. Model evaluation </mark>** </p>
+ 
+       Area Under the ROC CURVE comparing LLO and LTO model performance across different ecoclimatic zones and France 
+![Performance of a binary classification model](./updated_scripts/plots/interpretation/model/presence/ROC_AUC_LLO_LTO.jpeg)
 
-        With separate years
-![Histogram of *Culicoides spp* counts per trap per night with mean and median (separate years)](./Visualised_Data_basic/Histograms/hist_pertrap_pernight_with_stats_cornflower_indiv_years.jpeg)
+        Average prediction error in weeks for LLO and LTO models.\n
+        If error > 0, model predicts too late; \n
+        if error < 0, model predicts too early.
+![Performance as error in weeks](./updated_scripts/plots/interpretation/model/presence/prediction_error_in_weeks_LLTO.jpeg)
 
-        With separate years and Ecoclimatic zones
-![Histogram of *Culicoides spp* counts per trap per night with Ecoclimatic zones (separate years)](./Visualised_Data_basic/Histograms/hist_pertrap_pernight_with_stats_cornflower_indiv_years_eco_cli.jpeg)
+        Variable Importance with categories.
+![Variable importance without metrics)](./updated_scripts/plots/interpretation/model/presence/VIP_presence_no_metrics.jpeg)
+
+      Scaled  Variable Importance.
+![Variable importance with scale)](./updated_scripts/plots/interpretation/model/presence/VarImp_presence.jpeg)
+
+
+    Partial Dependence Plots (PDP).
+![Presence PDPs)](./updated_scripts/plots/interpretation/model/presence/PDP_presence.jpeg)
+
 -----------------------------------
 **<p align="center"> <mark>3. Timeseries</mark>** </p>
         Temporal changes of TOTAL daily counts of Culidoides spp. per each sampling day
