@@ -42,7 +42,7 @@
 - Red-bordered squares highlight the most correlated values
 - Black bordered squares are at least 90% correlated as the highest value.
 
-*Note: Cross-Correlation Maps (CCM) show association strength, but not direction!*
+*<span style="color:red">Note: Cross-Correlation Maps (CCM) show association strength, but not direction!</span>*
 
 ---
 ####  **Presence/Absence Model CCM (Distance)**
