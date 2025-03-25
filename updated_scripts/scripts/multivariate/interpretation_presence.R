@@ -65,7 +65,7 @@ binary_plot_LLO <- df_cv_presence_LLO %>%
   mutate(DATE=as.Date(DATE))%>%
   mutate(year=lubridate::year(DATE), week=lubridate::week(DATE))%>%
   dplyr::group_by(ECO_CLI,year,week) %>%
-  dplyr::summarise(pred = mean(pred), obs = mean(obs)) %>% ## to sum up, grouping by trap, location and num session 
+  dplyr::summarise(pred = mean(pred), obs = mean(obs)) %>% ## to sum up, grouping week, year and ecoclimatic zone 
   mutate(Prediction = if_else(pred >= 0.5, "1", "0"), Observation = if_else(obs >= 0.5, "1", "0"))%>%
   mutate(ECO_CLI = case_when(ECO_CLI == "Atlantic" ~ "Atlan.",
                              ECO_CLI == "Mediterranean" ~ "Med.",
@@ -158,8 +158,7 @@ roc_plots <- roc_plot_func(df_fin_cv, "ECO_CLI")
 roc_plots_all <- patchwork::wrap_plots(roc_plots, ncol = 3) + plot_annotation(title = "Presence Model Evaluation Per Ecoregion")
 
 ###########################################################Third step: VIP 
-#### 
-#Leave Location Out only
+
 model <- multiv_model_presence_LTO$model #model details (mtrees, specificity, sensitivity)
 df <- multiv_model_presence_LTO$df_mod #og dataframe
 df_cv <-  multiv_model_presence_LTO$df_cv #og data frame with predictions
@@ -169,7 +168,6 @@ importance <- varImp(model, scale=F)
 plot(importance) 
 
 ##################
-
 
 
 
@@ -214,9 +212,6 @@ plot_imp_presence_LLO <- ggplot(imp, aes(x = importance , y = label, label = var
   xlab("") +
   xlim(NA,max(imp$importance, na.rm = T) + max(imp$importance, na.rm = T)) +
   labs(title = " Presence model : Variable Importance Plot")
-
-### i finished here.
-
 
 
 #### Last step: PDP 
@@ -273,7 +268,7 @@ pred_ice<- function(object, newdata) {
     
 grid <- read.csv("../../qgis/culicoides_point_locations_grid_150_150.csv")%>%
   select(ID_SITE, ECO_CLI, Cell)
-eco_cli_colors <- c("Alpine" = "#D81B60",  "Atlantic" = "#1E88E5","Continental" = "#004D40",  "Mediterranean" = "#FFC107") # Vivid amber
+eco_cli_colors <- c("Alpine" = "#D81B60",  "Atlantic" = "#1E88E5","Continental" = "#004D40",  "Mediterranean" = "#FFC107") 
 
 df_ids <- df %>%
   rename(yhat.id = rowIndex)%>%
@@ -330,32 +325,25 @@ ia <- Interaction$new(mod) #interaction evaluation
 plot(ia) #visualising
 
 #calculating var1 x other vars interaction strength based on previous output
-Interaction$new(mod, feature = "ALT", grid.size = 30)
 
 ALT_int<-Interaction$new(mod, feature = "ALT", grid.size = 30)
 
 plot(ALT_int)
 
 
-
-
-
-
-###investigate why this shit works and my approach didnt
-## Define variables to analyze
+## which var pair im analysing
 varpair <- c("OVI", "ALT")  
 
-## Define function to predict probability of presence
+##function to predict presence probability
 pred_wrapper_classif <- function(object, newdata) { 
   p <- predict(object, newdata = newdata, type = "prob")[, "Presence"]  
   return(c("avg" = mean(p)))  
 }
 
-## Compute 2D Partial Dependence
-pd <- pdp::partial(model, pred.var = varpair, pred.fun = pred_wrapper_classif, train = df) #,grid.resolution = 20  # Adjust resolution for smoother visualization
+## 2D DPD
+pd <- pdp::partial(model, pred.var = varpair, pred.fun = pred_wrapper_classif, train = df) 
 
-
-pd$yhat[pd$yhat < 0] <- 0 #  probabilities stay within [0,1]
+pd$yhat[pd$yhat < 0] <- 0
 
 plot_pdp_2D <- ggplot(pd, aes(x = OVI, y = ALT, fill = yhat)) +
   geom_tile() +
@@ -366,6 +354,3 @@ plot_pdp_2D <- ggplot(pd, aes(x = OVI, y = ALT, fill = yhat)) +
     y = "Altitude\n(meters)",
     fill = "Probability") +
   theme(plot.title = element_text(hjust = 0.5, size= 14, face='bold')) 
-
-## Display the 2D PDP
-plot_pdp_2D
