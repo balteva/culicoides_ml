@@ -35,57 +35,58 @@
 - What are the drivers of increased *Culicoides* abundance?
 
 ## **VARIABLE SELECTION**
-### **Meteorological Data**
-#### **CROSS-CORRELATION MAPS (CCM)**
+### **CROSS-CORRELATION MAPS (CCM) for Meteorological Data**
 - Brighter red values indicate stronger correlation;
 - Lighter values indicate weak correlation;
 - Grey's indicate no correlation;
 - Red-bordered squares highlight the most correlated values
 - Black bordered squares are at least 90% correlated as the highest value.
 
-⚠️ *Note: Cross-Correlation Maps (CCM) show association strength, but not direction!*  
-#### 📈 **Presence/Absence Model CCM (Distance)**
+*Note: Cross-Correlation Maps (CCM) show association strength, but not direction!*  
+####  **Presence/Absence Model CCM (Distance)**
 ![Distance Correlation](./updated_scripts/plots/var_selection/presence/france_presence_distance_ccm.jpeg)
 
-####  **Feature Selection Process**
+###  **Feature Selection Proces:s**
 - General Linear Mixed Models used for initial variable selection (**p < 0.05**).
 - Features with correlation **> 0.7** in pairwise comparisons were filtered out, maintaining features with biological importance
 - Categorical features (wind strength, farm type) were analyzed through Fisher’s Exact Test and Cramer's V.
 
-##### **Potential features for the Presence/Absence model which are significantly associated with the response (presence)**
+### **Potential features for the Presence/Absence model which are significantly associated with the response (presence):**
 
 ![Plots of numerical vars for presence](./updated_scripts/plots/var_selection/presence/presence_vs_numerical_vars.jpeg)
 
-*However, using a heatmap, we can see that a lot of them are highly correlated between each other:*
+### ***However, using a heatmap, we can see that a lot of them are highly correlated between each other:**
 ![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/presence_var_correlation_heatmap.jpeg)
 
-##### **Final selection of numerical variables:**
+### **Final selection of numerical variables:**
 ![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/selected_presence_vars_heatmap.jpeg)
 
+---
 
 ## **Model output and Evaluation**
 ### **1. Presence Model Predictions**
 #### **Observed vs. Predicted (2009-2012, LTO CV)**
 ![binary presence LTO output](./updated_scripts/plots/interpretation/model/presence/binary_LTO.jpeg)
-
+---
 #### **With Ecolimatic zones**
 ![binary presence LTO with ecoclimatic zones](./updated_scripts/plots/interpretation/model/presence/eco_cli_year/binary_LTO_ecocli.jpeg)
-
 ---
 #### **Observed vs. Predicted probabilities for presence (2009 - 2012 LTO CV)**
 ![presence probability LTO](./updated_scripts/plots/interpretation/model/presence/presence_LTO_probability.jpeg)
 
-**Comparing presence model with LTO and LLO CV**
+#### **Comparing presence model with LTO and LLO CV**
 ![presence probabilitY LTO vs LLO](./updated_scripts/plots/interpretation/model/presence/LLTO_probability.jpeg)
 ---
 
 ### **2. Model Performance Metrics**
-#### 📊 **ROC Curve for LLO & LTO Models**
+####  **ROC Curve for LLO & LTO Models**
 ![ROC Curve](./updated_scripts/plots/interpretation/model/presence/ROC_AUC_LLO_LTO.jpeg)
+---
 #### **Prediction Error (Weeks)**
 - If error > 0 --> model predicts too late;
 - If error < 0 --> model predicts too early
 ![Performance as error in weeks](./updated_scripts/plots/interpretation/model/presence/prediction_error_in_weeks_LLTO.jpeg)
+---
 
 #### **Variable Importance with categories**
 ![Variable importance without metrics)](./updated_scripts/plots/interpretation/model/presence/VIP_presence_no_metrics.jpeg)
@@ -95,32 +96,32 @@
 
 ---
 ## **Variable Interaction Analysis**
-### - Partial Dependence Plots (PDPs)
-### - Individual Conditional Expectation (ICE).
-#### **PDPs and ICE show how  prediction changes when varying one predictor while keeping all other features fixed. Main difference:** 
-#### [ ] ICE shows how each individual instance's prediction changes when varying one feature's values
-#### [ ] PDP's show the average predction of all instances.
-### - Feature Interaction plots assessed with **H-statistic** which measures feature interaction strength: #### [ ] (**0 = no interaction, 1 = full interaction**).
+- Partial Dependence Plots (PDPs)
+- Individual Conditional Expectation (ICE).
+**PDPs and ICE show how  prediction changes when varying one predictor while keeping all other features fixed. Main difference:** 
+- ICE shows how each individual instance's prediction changes when varying one feature's values
+- PDP's show the average predction of all instances.
+- Feature Interaction plots assessed with **H-statistic** which measures feature interaction strength
+- **0 = no interaction, 1 = full interaction**
 
 #### **Partial Dependence Plot (PDP)**
 ![Presence PDPs)](./updated_scripts/plots/interpretation/model/presence/PDP_presence.jpeg)
-
+---
 #### **Centered ICE-c plots.**
-*By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.*
+**By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.**
 ![ICE - centered with Ecoclim. zones)](./updated_scripts/plots/interpretation/model/presence/ICE_presence_ecocli.jpeg)
-
+---
 #### **Variable interaction analysis with H-statistic**
-##### *Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.*
+**Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.**
 ![feature interaction](./updated_scripts/plots/interpretation/model/presence/feature_interaction_presence.jpeg)
-    
+---
 #### **Altitude vs Other Variables**
 ![Altitude interaction](./updated_scripts/plots/interpretation/model/presence/altitude_feature_int.jpeg)
 #### **2D Partial Depenence Plot**
-##### *The specific relationship between two strongly interacting features*
+**The specific relationship between two strongly interacting features**
 ![2D PDP](./updated_scripts/plots/interpretation/model/presence/betail_altitude_pdp.jpeg)
 
 ---
-
 
 ## Roadmap of the **Culicoides project**
 
