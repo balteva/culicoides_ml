@@ -40,8 +40,8 @@
 - Lighter values indicate weak correlation;
 - Grey's indicate no correlation;
 - Red-bordered squares highlight the most correlated values
-- Black bordered squares are at least 90% correlated as the highest value.
-*Note: Cross-Correlation Maps (CCM) show association strength, but not direction!* 
+- Black bordered squares are at least 90% correlated as the highest value.</p>
+*Note: Cross-Correlation Maps (CCM) show association strength, but not direction!*
 ---
 
 ####  **Presence/Absence Model CCM (Distance)**
@@ -57,7 +57,7 @@
 
 ![Plots of numerical vars for presence](./updated_scripts/plots/var_selection/presence/presence_vs_numerical_vars.jpeg)
 
-### *However, using a heatmap, we can see that a lot of them are highly correlated between each other:*
+*However, using a heatmap, we can see that a lot of them are highly correlated between each other:*
 ![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/presence_var_correlation_heatmap.jpeg)
 
 ### **Final selection of numerical variables:**
