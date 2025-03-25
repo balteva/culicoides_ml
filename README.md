@@ -41,10 +41,10 @@
 - Grey's indicate no correlation;
 - Red-bordered squares highlight the most correlated values
 - Black bordered squares are at least 90% correlated as the highest value.
----
-*Note: Cross-Correlation Maps (CCM) show association strength, but not direction!*
----
 
+*Note: Cross-Correlation Maps (CCM) show association strength, but not direction!*
+
+---
 ####  **Presence/Absence Model CCM (Distance)**
 ![Distance Correlation](./updated_scripts/plots/var_selection/presence/france_presence_distance_ccm.jpeg)
 ---
