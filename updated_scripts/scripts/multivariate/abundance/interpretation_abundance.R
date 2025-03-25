@@ -126,17 +126,14 @@ df_cv_abundance2 <- df_cv_abundance_LTO %>% ## separation of prediction in diffe
             mape =  round(MLmetrics::MAPE(y_true = obs ,y_pred = pred),2),
             r2 =  round(MLmetrics::R2_Score(y_true = obs, y_pred = pred),2),
             spearman = round(cor(obs, pred, method="spearman"),2),
+            pearsons = round(cor(obs, pred, method ="pearson"),2),
             n=n()) %>%
   as_tibble()
 
   
-  df_cv_abundance_LTO %>% 
-    ggplot(aes(x=obs, y=pred))+
-    geom_point() +
-    facet_grid(.~year)+
-    geom_smooth()
   
-## To represent visually the RMSE according to the different category of prediction 
+  
+## Violin plots with Rsquared
 plot_validation_abundance <- ggplot() + 
   geom_violin(data = df_cv_abundance2, aes(x=factor(year) , y=residuals)) + 
   stat_summary(data = df_cv_abundance2, aes(x=factor(year) , y=residuals), fun=median, geom="line", size=2, color="red") +
@@ -149,15 +146,42 @@ plot_validation_abundance <- ggplot() +
              mapping = aes(x = factor(year), y = max(df_cv_abundance2$residuals,na.rm = T), label = paste0('R-squared = ',r2,'\nn = ',n),
                            vjust = 1)) +
   scale_y_log10() +
-  ggtitle("Abundance model: R - squared by year (LTO CV)") + 
+  ggtitle("Abundance model: R - squared by year (LLO CV)") + 
   geom_hline(yintercept=0, linetype="dashed") + 
   theme(axis.title.x = element_text(size = 10, face="bold"),
         axis.title.y = element_text(size = 10, face="bold"),
         legend.position="bottom",
         plot.title = element_text(hjust = 0.5, size= 12, face='bold'))
+#########################
 
 
+#Plots for pred vs obs (Paul's idea :) )
 
+
+eval_plot_LTO <- df_cv_abundance_LTO %>% 
+  mutate(year=year(as.Date(DATE)))%>%
+  ggplot(aes(x=exp(obs), y=exp(pred)))+
+  geom_point(color="grey70", size=1.2) + #aes(color=ECO_CLI))+
+  theme_bw() +
+  facet_grid(.~year, scales="fixed")+
+  theme(strip.text.x = element_text(size = 14, colour = "darkblue", face="bold"))+
+  geom_smooth(color="maroon2", linewidth=1, se=T, fill="lightpink")+
+  scale_y_log10() +
+  scale_x_log10(labels = scales::number_format(scale = 1, suffix = "", accuracy = 1)) +
+  geom_label(data = df_metrics_perf,size = 4,
+             aes(x = mean(exp(df_cv_abundance_LTO$obs), na.rm = TRUE),  
+                 y = max(exp(df_cv_abundance_LTO$pred), na.rm = TRUE),
+                label = paste0("Spearman's rho = ", spearman, '\n', "n = ", n), vjust = 1, hjust = 0.5))+
+  xlab("Observations") + 
+  ylab("Predictions") +
+  ggtitle("Abundance LTO model evaluation: predicted vs. observed value")+
+  theme(axis.title.x = element_text(size = 12, face="bold"),
+        axis.text.x = element_text(size = 12, face="bold"),
+        axis.title.y = element_text(size = 12, face="bold"),
+        axis.text.y = element_text(size = 12, face="bold"),
+        plot.title = element_text(hjust = 0.5, size= 14, face='bold'))
+
+##finished here
 #### Third step: VIP  
 
 model = multiv_model_abundance_LTO$model
@@ -240,4 +264,3 @@ for(i in 1:length(imp$var)){
 
 plot_pdps_abundance <- patchwork::wrap_plots(pdps) + plot_annotation(title = "Abundance model : PDP") ## To put all variables together
 
-ggsave(filename = "02_Data/processed_data/plots/modelling_adults_abundance/abundance_PDP.pdf",plot =plot_pdps_abundance, device = "pdf", width = 11, height = 8) ## To save
