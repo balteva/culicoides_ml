@@ -343,7 +343,7 @@ plot(ALT_int)
 
 ###investigate why this shit works and my approach didnt
 ## Define variables to analyze
-varpair <- c("BETAIL", "ALT")  
+varpair <- c("OVI", "ALT")  
 
 ## Define function to predict probability of presence
 pred_wrapper_classif <- function(object, newdata) { 
@@ -357,16 +357,15 @@ pd <- pdp::partial(model, pred.var = varpair, pred.fun = pred_wrapper_classif, t
 
 pd$yhat[pd$yhat < 0] <- 0 #  probabilities stay within [0,1]
 
-plot_pdp_2D <- ggplot(pd, aes(x = BETAIL, y = ALT, fill = yhat)) +
+plot_pdp_2D <- ggplot(pd, aes(x = OVI, y = ALT, fill = yhat)) +
   geom_tile() +
-  scale_fill_viridis_c(option = "magma") +  # Better color scale
+  scale_fill_viridis_c(option = "magma") +
   theme_minimal() +
-  labs(
-    title = "2D PDP for Presence Probability",
-    x = "BETAIL",
-    y = "ALT",
-    fill = "Probability"
-  )
+  labs(title = "Partial Dependence Plot for C. obsoletus/scoticus\n presence probability",
+    x = "Ovine density\n (individuals/hectare in canton ))",
+    y = "Altitude\n(meters)",
+    fill = "Probability") +
+  theme(plot.title = element_text(hjust = 0.5, size= 14, face='bold')) 
 
 ## Display the 2D PDP
 plot_pdp_2D
