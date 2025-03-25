@@ -42,11 +42,14 @@
 - Red-bordered squares highlight the most correlated values
 - Black bordered squares are at least 90% correlated as the highest value.
 
-*Note: Cross-Correlation Maps (CCM) show association strength, but not direction!*  
+*Note: Cross-Correlation Maps (CCM) show association strength, but not direction!* 
+---
+
 ####  **Presence/Absence Model CCM (Distance)**
 ![Distance Correlation](./updated_scripts/plots/var_selection/presence/france_presence_distance_ccm.jpeg)
+---
 
-###  **Feature Selection Proces:s**
+###  **Feature Selection Process:**
 - General Linear Mixed Models used for initial variable selection (**p < 0.05**).
 - Features with correlation **> 0.7** in pairwise comparisons were filtered out, maintaining features with biological importance
 - Categorical features (wind strength, farm type) were analyzed through Fisher’s Exact Test and Cramer's V.
@@ -55,7 +58,7 @@
 
 ![Plots of numerical vars for presence](./updated_scripts/plots/var_selection/presence/presence_vs_numerical_vars.jpeg)
 
-### **However, using a heatmap, we can see that a lot of them are highly correlated between each other:**
+### *However, using a heatmap, we can see that a lot of them are highly correlated between each other:*
 ![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/presence_var_correlation_heatmap.jpeg)
 
 ### **Final selection of numerical variables:**
@@ -104,24 +107,28 @@
 - Feature Interaction plots assessed with **H-statistic** which measures feature interaction strength
 - **0 = no interaction, 1 = full interaction**
 
-#### **Partial Dependence Plot (PDP)**
+### **Partial Dependence Plot (PDP)**
 ![Presence PDPs)](./updated_scripts/plots/interpretation/model/presence/PDP_presence.jpeg)
 ---
-#### **Centered ICE-c plots.**
+### **Centered ICE-c plots.**
 ![ICE - centered with Ecoclim. zones)](./updated_scripts/plots/interpretation/model/presence/ICE_presence_ecocli.jpeg)
-**By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.**
+####  *By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.*
 ---
-#### **Variable interaction analysis with H-statistic**
-![feature interaction](./updated_scripts/plots/interpretation/model/presence/feature_interaction_presence.jpeg)
-**Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.**
----
-#### **Altitude vs Other Variables**
-![Altitude interaction](./updated_scripts/plots/interpretation/model/presence/altitude_feature_int.jpeg)
-#### **2D Partial Depenence Plot**
-**The specific relationship between two strongly interacting features**
-![2D PDP](./updated_scripts/plots/interpretation/model/presence/betail_altitude_pdp.jpeg)
 
+### **Variable interaction analysis with H-statistic**
+![feature interaction](./updated_scripts/plots/interpretation/model/presence/feature_interaction_presence.jpeg)
+#### *Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.*
 ---
+
+### **Altitude vs Other Variables**
+![Altitude interaction](./updated_scripts/plots/interpretation/model/presence/altitude_feature_int.jpeg)
+---
+
+### **2D Partial Depenence Plot**
+![2D PDP](./updated_scripts/plots/interpretation/model/presence/betail_altitude_pdp.jpeg)
+#### *Shows the strength and direction of the relationship between two interacting features*
+---
+
 
 ## Roadmap of the **Culicoides project**
 
