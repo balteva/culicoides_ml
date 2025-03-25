@@ -55,7 +55,7 @@
 
 ![Plots of numerical vars for presence](./updated_scripts/plots/var_selection/presence/presence_vs_numerical_vars.jpeg)
 
-### ***However, using a heatmap, we can see that a lot of them are highly correlated between each other:**
+### **However, using a heatmap, we can see that a lot of them are highly correlated between each other:**
 ![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/presence_var_correlation_heatmap.jpeg)
 
 ### **Final selection of numerical variables:**
@@ -108,12 +108,12 @@
 ![Presence PDPs)](./updated_scripts/plots/interpretation/model/presence/PDP_presence.jpeg)
 ---
 #### **Centered ICE-c plots.**
-**By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.**
 ![ICE - centered with Ecoclim. zones)](./updated_scripts/plots/interpretation/model/presence/ICE_presence_ecocli.jpeg)
+**By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.**
 ---
 #### **Variable interaction analysis with H-statistic**
-**Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.**
 ![feature interaction](./updated_scripts/plots/interpretation/model/presence/feature_interaction_presence.jpeg)
+**Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.**
 ---
 #### **Altitude vs Other Variables**
 ![Altitude interaction](./updated_scripts/plots/interpretation/model/presence/altitude_feature_int.jpeg)
