@@ -39,28 +39,34 @@
 ---
 
 ## Variable Selection
-### **CROSS-CORRELATION MAPS (CCM) for Meteorological Data**
+### **Meteorological Data - Cross-Correlation Maps (CCM)**
+Cross Correlation Maps indicate the which meteorological variable time lags are the most correlated to response (presence/absence and abundance) (**> 0.2** as selection threshold).
 
-
-####  **A) Presence/Absence Model CCM (Distance)**
+####  **A) Distance correlation (Presence model)**
+**Distance correlation captures the strength of a relationship (linear and non-linear) between two paired variables**
 ![Distance Correlation](./updated_scripts/plots/var_selection/presence/france_presence_distance_ccm.jpeg)
- Brighter red values indicate stronger correlation;
-- Lighter values indicate weak correlation;
-- Grey's indicate no correlation;
+- Brighter red values indicate stronger correlation
+- Lighter values indicate weak correlation
+- Grey's indicate no correlation
 - Red-bordered squares highlight the most correlated values
-- Black bordered squares are at least 90% correlated as the highest value.
-
-Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
+- Black bordered squares are at least 90% correlated as the highest value
+*Note: Cross-Correlation Maps (CCM) show association strength, but not direction!*
+---
+####  **B) Spearman's correlation (Presence model))**
+**Spearman’s correlation captures the direction of the relationship (negative or positive).**
+![Spearmans Correlation](./updated_scripts/plots/var_selection/presence/spearmans.jpeg)
+- Bright red = strong positive
+- Dark blue = strong negative
 ---
 
-###  **Feature Selection Process:**
-- General Linear Mixed Models used for initial variable selection (**p < 0.05**).
-- Cross Correlation Maps indicate the which meteorological variable time lags are the most correlated to response variable (**> 0.2** as selection threshold) 
-- Features with correlation **> 0.7** in pairwise comparisons were filtered out, maintaining features with biological importance
+###  **Non-meteorologic variable processing:**
+- General Linear Mixed Models (GLMMs) were used for microclimatic and landscape variable selection (**p < 0.05**). 
+- Features with correlation **> 0.7** in pairwise comparisons were filtered out, keeping in mind their biological importance.
 - Categorical features (wind strength, farm type) were analyzed through Fisher’s Exact Test and Cramer's V.
+- The final numerical and categorical variables were tested for collinearity with Biserial and urskal tests.
+
 
 ### **Potential features for the Presence/Absence model which are significantly associated with the response (presence):**
-
 ![Plots of numerical vars for presence](./updated_scripts/plots/var_selection/presence/potential_num_vars_vs_presence.jpeg)
 
 ### *However, using a heatmap, we can see that a lot of them are highly correlated between each other:*
