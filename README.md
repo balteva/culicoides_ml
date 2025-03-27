@@ -115,7 +115,7 @@ Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
 ![Presence PDPs)](./updated_scripts/plots/interpretation/presence/LTO_PDP.jpeg)
 ---
 ### **Centered ICE-c plots.**
-![ICE - centered with Ecoclim. zones)](./updated_scripts/plots/interpretation/model/presence/LTO_ice_c.jpeg)
+![ICE - centered with Ecoclim. zones)](./updated_scripts/plots/interpretation/presence/LTO_ice_c.jpeg)
 ####  *By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.*
 ---
 
@@ -125,12 +125,12 @@ Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
 ---
 
 ### **Water Volume in Soil interaction strength with other variables**
-![SWV interaction](./updated_scripts/plots/interpretation/model/presence/altitude_feature_int.jpeg)
+![SWV interaction](./updated_scripts/plots/interpretation/presence/altitude_feature_int.jpeg)
 ---
 
 ### **2D Partial Depenence Plot**
-![2D PDP](./updated_scripts/plots/interpretation/model/presence/betail_altitude_pdp.jpeg)
-#### *Shows the strength and direction of the relationship between two interacting features*
+![2D PDP](./updated_scripts/plots/interpretation/presence/2D_PDP_SWV_BETAIL.jpeg)
+#### *Shows how presence probability is affected through the interaction of livestock density and soil moisture*
 ---
 
 

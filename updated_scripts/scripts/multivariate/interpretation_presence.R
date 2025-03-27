@@ -324,13 +324,13 @@ plot(ia) #visualising
 
 #calculating var1 x other vars interaction strength based on previous output
 
-ALT_int<-Interaction$new(mod, feature = "ALT", grid.size = 30)
+SWV_int<-Interaction$new(mod, feature = "SWV_0_4", grid.size = 30)
 
-plot(ALT_int)
+plot(SWV_int)
 
 
 ## which var pair im analysing
-varpair <- c("OVI", "ALT")  
+varpair <- c("SWV_0_4", "ALT")  
 
 ##function to predict presence probability
 pred_wrapper_classif <- function(object, newdata) { 
@@ -343,12 +343,12 @@ pd <- pdp::partial(model, pred.var = varpair, pred.fun = pred_wrapper_classif, t
 
 pd$yhat[pd$yhat < 0] <- 0
 
-plot_pdp_2D <- ggplot(pd, aes(x = OVI, y = ALT, fill = yhat)) +
+plot_pdp_2D <- ggplot(pd, aes(x = SWV_0_4, y = BETAIL, fill = yhat)) +
   geom_tile() +
   scale_fill_viridis_c(option = "magma") +
   theme_minimal() +
   labs(title = "Partial Dependence Plot for C. obsoletus/scoticus\n presence probability",
-    x = "Ovine density\n (individuals/hectare in canton ))",
-    y = "Altitude\n(meters)",
+    x = "Avg. Volume of Water in Soil (m³/m³)",
+    y = "Livestock density\n (individuals/hectare in canton )",
     fill = "Probability") +
   theme(plot.title = element_text(hjust = 0.5, size= 14, face='bold')) 
