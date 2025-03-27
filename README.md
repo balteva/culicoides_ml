@@ -104,8 +104,10 @@ Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
 ---
 ## **Variable Interaction Analysis**
 - Partial Dependence Plots (PDPs)
-- Individual Conditional Expectation (ICE).
-**PDPs and ICE show how  prediction changes when varying one predictor while keeping all other features fixed. Main difference:** 
+- Individual Conditional Expectation (ICE)
+**PDPs and ICE show how  prediction changes when varying one predictor while keeping all other features fixed**
+
+### **Main difference:** 
 - ICE shows how each individual instance's prediction changes when varying one feature's values
 - PDP's show the average predction of all instances.
 - Feature Interaction plots assessed with **H-statistic** which measures feature interaction strength
@@ -125,7 +127,7 @@ Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
 ---
 
 ### **Water Volume in Soil interaction strength with other variables**
-![SWV interaction](./updated_scripts/plots/interpretation/presence/altitude_feature_int.jpeg)
+![SWV interaction](./updated_scripts/plots/interpretation/presence/SWV_vs_vars_interaction.jpeg)
 ---
 
 ### **2D Partial Depenence Plot**
