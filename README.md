@@ -6,8 +6,9 @@
 ---
 ## Project Structure
 - **`/updated_scripts/`** – Contains updated scripts, model outputs, and interpretation.
-- **`/scripts/`** – Legacy scripts for data preparation, cross-correlation mapping, and multivariate analysis.
+- **`/scripts/`** – Old scripts for for data preparation, cross-correlation mapping, and multivariate analysis* 
 - **`/datapaper_viz/`** – Visualizations of the Ocapi database (histograms, boxplots).
+*kept for tracking errors
 ---
 ## **Data Summary**
 **Study Period:** 2009-2012  
@@ -17,11 +18,12 @@
 - **~160 traps per year**
 - **Total of 14,895 trapping sessions**
 - **Collection of species, landscape, and microclimatic data**
+
 **Trap Locations and Ecoclimatic Zones**  
 ![France Traps](./updated_scripts/plots/qgis/France_EcoCli_Departments_Traps.png)
 
 **Grid for Spatial Cross-Validation (150km x 150km)**  
-![Grid Map](./updated_scripts/plots/qgis/grid_map_france.png)
+![Grid Map](./updated_scripts/plots/qgis/precise_LLO_grid.jpeg)
 
 ---
 
@@ -58,46 +60,46 @@ Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
 
 ### **Potential features for the Presence/Absence model which are significantly associated with the response (presence):**
 
-![Plots of numerical vars for presence](./updated_scripts/plots/var_selection/presence/presence_vs_numerical_vars.jpeg)
+![Plots of numerical vars for presence](./updated_scripts/plots/var_selection/presence/potential_num_vars_vs_presence.jpeg)
 
 ### *However, using a heatmap, we can see that a lot of them are highly correlated between each other:*
-![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/presence_var_correlation_heatmap.jpeg)
+![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/potential_num_vars_heatmap.jpeg)
 
 ### **Final selection of numerical variables:**
-![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/selected_presence_vars_heatmap.jpeg)
+![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/selected_num_vars_heatmap.jpeg)
 
 ---
 
 ## **Model output and Evaluation**
 ### **1. Presence Model Predictions**
 #### **Observed vs. Predicted (2009-2012, LTO CV)**
-![binary presence LTO output](./updated_scripts/plots/interpretation/model/presence/binary_LTO.jpeg)
+![binary presence LTO output](./updated_scripts/plots/interpretation/presence/LTO_binary.jpeg)
 ---
 #### **With Ecolimatic zones**
-![binary presence LTO with ecoclimatic zones](./updated_scripts/plots/interpretation/model/presence/eco_cli_year/binary_LTO_ecocli.jpeg)
+![binary presence LTO with ecoclimatic zones](./updated_scripts/plots/interpretation/presence/ECO_CLI/LTO_binary_ecocli.jpeg)
 ---
 #### **Observed vs. Predicted probabilities for presence (2009 - 2012 LTO CV)**
-![presence probability LTO](./updated_scripts/plots/interpretation/model/presence/presence_LTO_probability.jpeg)
+![presence probability LTO](./updated_scripts/plots/interpretation/presence/LTO_probability.jpeg)
 
 #### **Comparing presence model with LTO and LLO CV**
-![presence probabilitY LTO vs LLO](./updated_scripts/plots/interpretation/model/presence/LLTO_probability.jpeg)
+![presence probabilitY LTO vs LLO](./updated_scripts/plots/interpretation/presence/LLTO_probability.jpeg)
 ---
 
 ### **2. Model Performance Metrics**
 ####  **ROC Curve for LLO & LTO Models**
-![ROC Curve](./updated_scripts/plots/interpretation/model/presence/ROC_AUC_LLO_LTO.jpeg)
+![ROC Curve](./updated_scripts/plots/interpretation/presence/ROC.jpeg)
 ---
 #### **Prediction Error (Weeks)**
 - If error > 0 --> model predicts too late;
 - If error < 0 --> model predicts too early
-![Performance as error in weeks](./updated_scripts/plots/interpretation/model/presence/prediction_error_in_weeks_LLTO.jpeg)
+![Performance as error in weeks](./updated_scripts/plots/interpretation/presence/prediction_error_in_weeks_LLTO.jpeg)
 ---
 
 #### **Variable Importance with categories**
-![Variable importance without metrics)](./updated_scripts/plots/interpretation/model/presence/VIP_presence_no_metrics.jpeg)
+![Variable importance without metrics)](./updated_scripts/plots/interpretation/presence/LTO_VIP.jpeg)
 
 #### **Scaled  Variable Importance**
-![Variable importance with scale)](./updated_scripts/plots/interpretation/model/presence/VarImp_presence.jpeg)
+![Variable importance with scale)](./updated_scripts/plots/interpretation/presence/LTO_varimp_scaled.jpeg)
 
 ---
 ## **Variable Interaction Analysis**
@@ -110,20 +112,20 @@ Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
 - **0 = no interaction, 1 = full interaction**
 
 ### **Partial Dependence Plot (PDP)**
-![Presence PDPs)](./updated_scripts/plots/interpretation/model/presence/PDP_presence.jpeg)
+![Presence PDPs)](./updated_scripts/plots/interpretation/presence/LTO_PDP.jpeg)
 ---
 ### **Centered ICE-c plots.**
-![ICE - centered with Ecoclim. zones)](./updated_scripts/plots/interpretation/model/presence/ICE_presence_ecocli.jpeg)
+![ICE - centered with Ecoclim. zones)](./updated_scripts/plots/interpretation/model/presence/LTO_ice_c.jpeg)
 ####  *By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.*
 ---
 
 ### **Variable interaction analysis with H-statistic**
-![feature interaction](./updated_scripts/plots/interpretation/model/presence/feature_interaction_presence.jpeg)
+![Feature interaction](./updated_scripts/plots/interpretation/presence/LTO_feature_interaction.jpeg)
 #### *Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.*
 ---
 
-### **Altitude vs Other Variables**
-![Altitude interaction](./updated_scripts/plots/interpretation/model/presence/altitude_feature_int.jpeg)
+### **Water Volume in Soil interaction strength with other variables**
+![SWV interaction](./updated_scripts/plots/interpretation/model/presence/altitude_feature_int.jpeg)
 ---
 
 ### **2D Partial Depenence Plot**

@@ -7,26 +7,25 @@ library(lubridate)
 
 
 
-grid <- read.csv("../../qgis/culicoides_point_locations_grid_150_150.csv")%>%
-  select(ID_SITE, ECO_CLI, Cell)
+# grid <- read.csv("../../qgis/culicoides_point_locations_grid_150_150.csv")%>%
+#   select(ID_SITE, ECO_CLI, Cell) #dont need it now because added in model prep
 
 #cv with location LLO
-multiv_model_presence_LLO <- readRDS("./updated_scripts/models/RF_model_presence_LLO.rds")
+multiv_model_presence_LLO <- readRDS("./updated_scripts/models/RF_model_presence_LLO_interpretation.rds")
 
 
 #CV with LTO
-multiv_model_presence_LTO <- readRDS("./updated_scripts/models/RF_model_presence_LTO.rds")
+multiv_model_presence_LTO <- readRDS("./updated_scripts/models/RF_model_presence_LTO_interpretation.rds")
 
 
 #results of LLO
-model_presence_LLO <- multiv_model_presence_LLO[[1]] #### sum up of presence model
-df_cv_presence_LLO <- multiv_model_presence_LLO[[2]] %>% #### data frame with prediction 
-  left_join(grid)
+model_presence_LLO <- multiv_model_presence_LLO[[1]] #### sum up of presence model 
+df_cv_presence_LLO <- multiv_model_presence_LLO[[2]]  #### data frame with prediction # %>% #  left_join(grid)
 df_mod_presence_LLO<- multiv_model_presence_LLO[[3]] #### data frame which was used to build the model
 
 ##results of LTO
-df_cv_presence_LTO <- multiv_model_presence_LTO[[2]] %>% #### data frame with prediction 
-  left_join(grid)
+df_cv_presence_LTO <- multiv_model_presence_LTO[[2]]  #### data frame with prediction #  left_join(grid)
+
 
 
 eco_cli_colors <- c("Alpine" = "#faa09b", "Atlantic" = "#c8e18d", "Continental" = "#c5f1f2", "Mediterranean" = "#d7bdeb") 
@@ -34,10 +33,10 @@ eco_cli_colors <- c("Alpine" = "#faa09b", "Atlantic" = "#c8e18d", "Continental" 
 
 # LTO == "maroon2"
 # LLO == "deepskyblue3"
-plot_eval_presence_model_LLO <- df_cv_presence_LLO %>%
+plot_eval_presence_model_LTO <- df_cv_presence_LTO %>%
   mutate(DATE=as.Date(DATE))%>%
   mutate(year=lubridate::year(DATE), week=lubridate::week(DATE))%>%
-  dplyr::group_by(ECO_CLI, year,week) %>%  
+  dplyr::group_by(ECO_CLI,year,week) %>% #ECO_CLI,   
   dplyr::summarise(pred = mean(pred), obs = mean(obs)) %>% ## to sum up, grouping by week, year and ecoclimatic zone
   as_tibble() %>%
   pivot_longer(c('pred','obs')) %>%
@@ -45,13 +44,13 @@ plot_eval_presence_model_LLO <- df_cv_presence_LLO %>%
   ggplot(aes(x=week, y = value, color = name)) +
   #geom_point() + 
   geom_line(linewidth=0.8) + 
-  facet_wrap(~ECO_CLI~year, scales = "free") +
+  facet_wrap(~ECO_CLI~year, scales = "free") + #~ECO_CLI
   theme_bw() + 
-  scale_colour_manual(values=c("grey70","deepskyblue3"),na.translate = F) + 
+  scale_colour_manual(values=c("grey70","maroon2"),na.translate = F) + 
   scale_x_continuous(breaks = seq(4,52,4)) +
   xlab("week") +
   ylab("∑ Presence probability") + 
-  labs(color='Probability of presence of Culicoides Obsoletus/Scoticus by Ecoclimatic zone (LLO CV)') + 
+  labs(color='Probability of presence of Culicoides Obsoletus/Scoticus by Ecoclimatic Zone (LTO CV)') + 
   ggtitle('Presence models : observed vs. predicted values')+
   theme(axis.title.x = element_text(size = 12, face="bold"),
       axis.title.y = element_text(size = 12, face="bold"),
@@ -64,19 +63,19 @@ plot_eval_presence_model_LLO <- df_cv_presence_LLO %>%
 binary_plot_LLO <- df_cv_presence_LLO %>%
   mutate(DATE=as.Date(DATE))%>%
   mutate(year=lubridate::year(DATE), week=lubridate::week(DATE))%>%
-  dplyr::group_by(ECO_CLI,year,week) %>%
+  dplyr::group_by(year,week) %>%#ECO_CLI,
   dplyr::summarise(pred = mean(pred), obs = mean(obs)) %>% ## to sum up, grouping week, year and ecoclimatic zone 
   mutate(Prediction = if_else(pred >= 0.5, "1", "0"), Observation = if_else(obs >= 0.5, "1", "0"))%>%
-  mutate(ECO_CLI = case_when(ECO_CLI == "Atlantic" ~ "Atlan.",
-                             ECO_CLI == "Mediterranean" ~ "Med.",
-                             ECO_CLI == "Continental" ~ "Cont.",
-                             ECO_CLI == "Alpine" ~ "Alp."))%>%
+  # mutate(ECO_CLI = case_when(ECO_CLI == "Atlantic" ~ "Atlan.",
+  #                            ECO_CLI == "Mediterranean" ~ "Med.",
+  #                            ECO_CLI == "Continental" ~ "Cont.",
+  #                            ECO_CLI == "Alpine" ~ "Alp."))%>%
   as_tibble() %>%
   pivot_longer(cols=c('Prediction','Observation'), names_to="Type", values_to = "PresenceStatus") %>%
   ggplot(aes(x=week, y = Type, fill = PresenceStatus)) +
   geom_tile()+
   coord_fixed(ratio =4) +
-  facet_grid(~ECO_CLI~year, scales="fixed") +#
+  facet_grid(~year, scales="fixed") +#~ECO_CLI
   theme_minimal() + 
   scale_x_continuous(breaks = seq(2, 52, 4)) +
   scale_fill_manual(values = c("0" = "#4682B4", "1" = "#FF6347"), labels =c("Absence", "Presence"))+
@@ -85,7 +84,7 @@ binary_plot_LLO <- df_cv_presence_LLO %>%
   theme(legend.position="bottom", strip.text=element_text(face="bold", size=10),
         plot.title = element_text(hjust = 0.5, size= 15, face='bold'),
         axis.title.x = element_text(size=12, face="bold"),  axis.title.y = element_text(size=12, face="bold")) + 
-  ggtitle("Predictions of Culicoides Obsoletus/Scoticus presence by ecoclimatic zone (LLO CV)")
+  ggtitle("Predictions of Culicoides Obsoletus/Scoticus presence by year (LLO CV)")
 
 
 #####
@@ -100,7 +99,7 @@ df_fin_cv<-merge(df_cv_presence_LLO, df_LTO_presence, by="idpointdecapture")%>%
 # LTO == "maroon2"
 # LLO == "deepskyblue3"
 plot_eval_presence_model <- df_fin_cv %>%
-  dplyr::group_by(year, week) %>%   #ECO_CLI,
+  dplyr::group_by(ECO_CLI,year, week) %>%   #ECO_CLI,
   dplyr::summarise(pred = mean(pred), obs = mean(obs), pred_year=mean(pred_year)) %>%
   as_tibble() %>%
   pivot_longer(c('pred','obs', 'pred_year')) %>%
@@ -108,7 +107,7 @@ plot_eval_presence_model <- df_fin_cv %>%
   ggplot(aes(x=week, y = value, color = name)) +
   #geom_point() + 
   geom_line(linewidth=1) + 
-  facet_wrap(~year, scales = "free") + #~ECO_CLI
+  facet_wrap(~ECO_CLI~year, scales = "free") + #~ECO_CLI
   theme_bw() + 
   scale_colour_manual(values=c("grey70","deepskyblue3","maroon2"),na.translate = F) + 
   scale_x_continuous(breaks = seq(2,52,4)) +
@@ -119,7 +118,7 @@ plot_eval_presence_model <- df_fin_cv %>%
         axis.title.y = element_text(size = 12, face="bold"),
         legend.position="bottom",
         plot.title = element_text(hjust = 0.5, size= 14, face='bold'))+
-  ggtitle("Probability of presence of C. obsoletus/scoticus by year (for entire France)")
+  ggtitle("Probability of presence of C. obsoletus/scoticus by Ecoclimatic Zone\n and year (for entire France)")
 
 
 #### Second step: Model validation plots: ROC 
@@ -155,7 +154,7 @@ roc_plot_func <- function(df, var){
 
 
 roc_plots <- roc_plot_func(df_fin_cv, "ECO_CLI")
-roc_plots_all <- patchwork::wrap_plots(roc_plots, ncol = 3) + plot_annotation(title = "Presence Model Evaluation Per Ecoregion")
+roc_plots_all <- patchwork::wrap_plots(roc_plots, ncol = 3) + plot_annotation(title = "Presence Model Evaluation Per Ecoclimatic Zone")
 
 ###########################################################Third step: VIP 
 
@@ -164,7 +163,7 @@ df <- multiv_model_presence_LTO$df_mod #og dataframe
 df_cv <-  multiv_model_presence_LTO$df_cv #og data frame with predictions
 
 ##easier to understand importace measure
-importance <- varImp(model, scale=F)
+importance <- varImp(model, scale=T)
 plot(importance) 
 
 ##################
@@ -183,22 +182,21 @@ imp <- imp %>%
   dplyr::rename(importance = imp) %>%
   mutate(label = forcats::fct_reorder(var, importance)) %>%
   arrange(-importance) %>% 
-  mutate(Type = case_when(var %in% c("UM_0_0", "TEMPMINI") ~ "Meteorological",
-                          var %in% ("VENTDEBUT") ~ "Micro-climatic",
-                          var %in% c("ALT","SITUATIONPIEGE") ~ "Landscape",
+  mutate(Type = case_when(var %in% ("TM_0_0") ~ "Meteorological",
+                          var %in% c("ALT","SWV_0_4", "EVI_0_3", "SITUATIONPIEGE") ~ "Landscape",
                           var %in% c("OVI", "BETAIL", "ACTIV_VIANDE") ~ "Livestock"))%>%
-  mutate(var = case_when(var == "UM_0_0" ~ "Relative Humidity",
-                         var == "TEMPMINI" ~ "Minimum Temperature",
-                         var == "VENTDEBUT" ~ "Wind strength before collection",
+  mutate(var = case_when(var == "TM_0_0" ~ "Avg. Temperature one week before collection",
+                         var == "SWV_0_4" ~ "Water Volume in Soil 1-5 weeks before collection",
+                         var == "EVI_0_3" ~ "Enhanced Vegetation Index 1-4 weeks before collection",
                          var == "ALT" ~ "Altitude",
-                         var == "OVI" ~ "Nb of sheeps/hectare in canton",
-                         var == "BETAIL" ~ "Nb of livestock animals/hectare in canton",
+                         var == "OVI" ~ "Nb. of sheeps/hectare in canton",
+                         var == "BETAIL" ~ "Nb. of livestock animals/hectare in canton",
                          var == "SITUATIONPIEGE" ~ "Trap location (inside/outside)",
                          var == "ACTIV_VIANDE" ~ "Meat production activity"))
 
 
 ## To plot the importance of the variables
-plot_imp_presence_LLO <- ggplot(imp, aes(x = importance , y = label, label = var, fill = Type)) +
+plot_imp_presence_LTO <- ggplot(imp, aes(x = importance , y = label, label = var, fill = Type)) +
   geom_bar(position = 'dodge', stat="identity", width = 0.6) + 
   theme_bw() + 
   geom_text(size=3,position = position_dodge(0.9),hjust=-0.1) +
@@ -216,7 +214,7 @@ plot_imp_presence_LLO <- ggplot(imp, aes(x = importance , y = label, label = var
 
 #### Last step: PDP 
 
-categorical_vars <- c("SITUATIONPIEGE", "VENTDEBUT", "ACTIV_VIANDE")
+categorical_vars <- c("SITUATIONPIEGE", "ACTIV_VIANDE")
 
 
 library(pdp)
@@ -291,31 +289,31 @@ for(i in 1:length(imp$var)){
   
   if (!(imp$var[i] %in% categorical_vars)){
     pdps_ice[[i]] <- ggplot(pd, aes_string(x=imp$var[i], y="yhat.centered", color= "ECO_CLI")) +
-      geom_line(aes(group = yhat.id), alpha = 0.7, linewidth=0.6) +
-      stat_summary(fun.y = mean, geom = "line", col = "red", size = 1) +
+      geom_line(aes(group = yhat.id), alpha = 0.6, linewidth=0.4) +
+      stat_summary(fun.y = mean, geom = "line", col = "red", size = 0.9) +
       ylab("Change in Presence Prediction")+
       theme_classic() +
       scale_color_manual(values=eco_cli_colors) +
       labs(color = "Ecoclimatic Zone") +  
-      guides(color = guide_legend(override.aes = list(linewidth = 2, alpha = 1)))  
+      guides(color = guide_legend(override.aes = list(linewidth = 1, alpha = 1)))  
     
   }}
 
 plot_ice_presence <- patchwork::wrap_plots(pdps_ice) + 
-  plot_annotation(title = "Presence models : Individual Conditional Expectation (ICE) plots") +
+  plot_annotation(title = "Presence model : Individual Conditional Expectation (ICE) plots") +
   plot_layout(guides = "collect")
 ######### MEASURING FEATURE INTERACTIONS
 library(yaImpute)
 library(caret)
 library(data.table)
 ## just a reminder of where i'm getting the data:
-# model <- multiv_model_presence_LLO$model #model details (mtrees, specificity, sensitivity)
-# df <- multiv_model_presence_LLO$df_mod #og dataframe
-# df_cv <-  multiv_model_presence_LLO$df_cv #og data frame with predictions
+# model <- multiv_model_presence_LTO$model #model details (mtrees, specificity, sensitivity)
+# df <- multiv_model_presence_LTO$df_mod #og dataframe
+# df_cv <-  multiv_model_presence_LTO$df_cv #og data frame with predictions
 
 
 data_only <- df %>% #making a df with only the predictors used in RF
-  select(-c("idpointdecapture", "ID_SITE", "DATE", "Cell", "year", "NBINDIV", "PRES_CUL", "rowIndex"))
+  select(-c("idpointdecapture", "ECO_CLI","ID_SITE", "DATE", "Cell", "year", "NBINDIV", "PRES_CUL", "rowIndex"))
 
 options(future.globals.maxSize = 2 * 1024 * 1024 * 1024)  # 2GB, computing interaction needs extra power
 
