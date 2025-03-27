@@ -36,7 +36,7 @@
 - Which factors lead to an earlier seasonal activity of *Culicoides spp.* ?
 - What are the drivers of increased *Culicoides* abundance?
 
-## **VARIABLE SELECTION**
+## Variable Selection
 ### **CROSS-CORRELATION MAPS (CCM) for Meteorological Data**
 - Brighter red values indicate stronger correlation;
 - Lighter values indicate weak correlation;
@@ -70,7 +70,8 @@ Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
 
 ---
 
-## **Model output and Evaluation**
+## Model output and Evaluation
+---
 ### **1. Presence Model Predictions**
 #### **Observed vs. Predicted (2009-2012, LTO CV)**
 ![binary presence LTO output](./updated_scripts/plots/interpretation/presence/LTO_binary.jpeg)
@@ -106,8 +107,7 @@ Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
 - Partial Dependence Plots (PDPs)
 - Individual Conditional Expectation (ICE)
 **PDPs and ICE show how  prediction changes when varying one predictor while keeping all other features fixed**
-
-### **Main difference:** 
+#### **Main difference:** 
 - ICE shows how each individual instance's prediction changes when varying one feature's values
 - PDP's show the average predction of all instances.
 - Feature Interaction plots assessed with **H-statistic** which measures feature interaction strength
