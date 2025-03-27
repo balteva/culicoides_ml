@@ -36,25 +36,26 @@
 - Which factors lead to an earlier seasonal activity of *Culicoides spp.* ?
 - What are the drivers of increased *Culicoides* abundance?
 
+---
+
 ## Variable Selection
 ### **CROSS-CORRELATION MAPS (CCM) for Meteorological Data**
-- Brighter red values indicate stronger correlation;
+
+
+####  **A) Presence/Absence Model CCM (Distance)**
+![Distance Correlation](./updated_scripts/plots/var_selection/presence/france_presence_distance_ccm.jpeg)
+ Brighter red values indicate stronger correlation;
 - Lighter values indicate weak correlation;
 - Grey's indicate no correlation;
 - Red-bordered squares highlight the most correlated values
 - Black bordered squares are at least 90% correlated as the highest value.
 
-*<span style="color:red"> 
 Note: Cross-Correlation Maps (CCM) show association strength, but not direction!
-</span>*
-
----
-####  **Presence/Absence Model CCM (Distance)**
-![Distance Correlation](./updated_scripts/plots/var_selection/presence/france_presence_distance_ccm.jpeg)
 ---
 
 ###  **Feature Selection Process:**
 - General Linear Mixed Models used for initial variable selection (**p < 0.05**).
+- Cross Correlation Maps indicate the which meteorological variable time lags are the most correlated to response variable (**> 0.2** as selection threshold) 
 - Features with correlation **> 0.7** in pairwise comparisons were filtered out, maintaining features with biological importance
 - Categorical features (wind strength, farm type) were analyzed through Fisher’s Exact Test and Cramer's V.
 
