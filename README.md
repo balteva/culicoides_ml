@@ -54,7 +54,7 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 ---
 ####  **B) Spearman's correlation (Presence model))**
 **Spearman’s correlation captures the direction of the relationship (negative or positive).**
-![Spearmans Correlation](./updated_scripts/plots/var_selection/presence/spearmans.jpeg)
+![Spearmans Correlation](./updated_scripts/plots/var_selection/presence/france_presence_spearmans_ccm.jpeg)
 - Bright red = strong positive
 - Dark blue = strong negative
 ---
@@ -100,7 +100,7 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 #### **Prediction Error (Weeks)**
 - If error > 0 --> model predicts too late;
 - If error < 0 --> model predicts too early
-![Performance as error in weeks](./updated_scripts/plots/interpretation/presence/prediction_error_in_weeks_LLTO.jpeg)
+![Performance as error in weeks](./updated_scripts/plots/interpretation/presence/LLTO_error_weeks.jpg)
 ---
 
 #### **Variable Importance with categories**

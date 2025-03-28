@@ -1,8 +1,6 @@
-
-
 error_LTO <- df_cv_presence_LTO %>%
   mutate(DATE=as.Date(DATE))%>%
-  mutate(year=lubridate::year(DATE),week=lubridate::week(DATE))%>%
+  mutate(year=lubridate::year(DATE), week=lubridate::week(DATE))%>%
   dplyr::group_by(Cell,year,week) %>% #so my mean is gonna be for each cell per week across the study period
   summarise(cell_pred = mean(pred), cell_obs = mean(obs))%>% #calculating the mean of the prediction and observation for each cell per week
   group_by(Cell, year) %>%
@@ -20,7 +18,7 @@ mean_error_pred_LTO <- error_LTO %>%
 #This here should be per ECO_CLI
 error_LTO <- df_cv_presence_LTO %>%
   mutate(DATE=as.Date(DATE))%>%
-  mutate(year=lubridate::year(DATE),week=lubridate::week(DATE))%>%
+  mutate(year=lubridate::year(DATE), week=lubridate::week(DATE))%>%
   dplyr::group_by(ECO_CLI, ID_SITE,year,week) %>% #so my mean is gonna be for each cell per week across the study period
   summarise(idsite_pred = mean(pred), idsite_obs = mean(obs))%>% #this shouldnt change anything 
   group_by(ECO_CLI, year) %>%
