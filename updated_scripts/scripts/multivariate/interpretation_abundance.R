@@ -194,7 +194,7 @@ imp$var <- rownames(imp)
 
 ################
 library(caret)
-importance <- varImp(model, scale=F)
+importance <- varImp(model, scale=T)
 plot(importance) 
 
 
@@ -204,18 +204,14 @@ imp <- imp %>%
   dplyr::rename(importance = imp) %>%
   mutate(label = forcats::fct_reorder(var, importance)) %>%
   arrange(-importance) %>% 
-  mutate(Type = case_when(var %in% c("UM_0_0", "TEMPMINI", "EVI_1_5") ~ "Meteorological",
-                          var %in% c("VENTDEBUT", "PLUIEDEBUT") ~ "Micro-climatic",
-                          var %in% c("ALT","CLC_level2") ~ "Landscape",
-                          var %in% ("ELEV_OVIN") ~ "Livestock"))%>%
-  mutate(var = case_when(var == "UM_0_0" ~ "Relative Humidity",
-                         var == "TEMPMINI" ~ "Minimum Temperature",
-                         var == "VENTDEBUT" ~ "Wind strength before collection",
-                         var == "PLUIEDEBUT" ~"Rain before collection",
+  mutate(Type = case_when(var %in% ("TX_0_0") ~ "Meteorological",
+                          var %in% c("ALT","SWV_0_0", "EVI_1_5") ~ "Landscape",
+                          var %in% ("ELEV_OVIN") ~ "Livestock")) %>%
+  mutate(var = case_when(var == "TX_0_0" ~ "Avg. Highest Temperature 1 week before collection",
+                         var == "SWV_0_0" ~ "Water Volume in Soil 1 week before collection",
+                         var == "EVI_1_5" ~ "Enhanced Vegetation Index 2-6 weeks before collection",
                          var == "ALT" ~ "Altitude",
-                         var == "ELEV_OVIN" ~ "Cattle farm",
-                         var == "CLC_level2" ~ "Corine land cover type ",
-                         var == "EVI_1_5" ~ "Enhanced Vegetation Index 2 - 6 weeks before collection"))
+                         var == "ELEV_OVIN" ~ "Sheep farm"))
 
 
 ## To plot the importance of the variables
@@ -232,34 +228,164 @@ plot_imp_abundance_LTO <- ggplot(imp, aes(x = importance , y = label, label = va
   ylab("") + 
   xlab("") +
   xlim(NA,max(imp$importance, na.rm = T) + max(imp$importance, na.rm = T)) +
-  labs(title = " Presence model : Variable Importance Plot")
+  labs(title = " Abundance model : Variable Importance Plot")
 #### Last step: PDP  
 
 ## To create a function which predicts the abundance according different variables
+categorical_vars <- ("ELEV_OVIN")
+exclusive <- ("TX_0_0")
+
+
+fold_results <- model$resample
+mean_accuracy <- mean(fold_results$MAE)
+std_accuracy <- sd(fold_results$MAE)
+
 
 pred_wrapper_reg <- function(object, newdata) {
   p <- predict(object, newdata = newdata)
   c("avg" = mean(p))
-  #c("avg" = mean(p), "avg-1sd" = mean(p) - sd(p), "avg+1sd" = mean(p) + sd(p))
 }
 
 pdps <- list()
+i<-1
 for(i in 1:length(imp$var)){
-  pd <- pdp::partial(model, pred.var = imp$var[i], pred.fun = pred_wrapper_reg, train = df)
-  pd$yhat[which(pd$yhat<0)] <-0 
-  p <- autoplot(pd, smooth = T)  
-  dat1 <- ggplot_build(p)$data[[1]]
-  dat2 <- ggplot_build(p)$data[[2]]
-  pdps[[i]] <- ggplot() + 
-    geom_line(data = dat1, aes(x = x, y = y), size = 0.3, colour = "black", alpha = 0.4) +   ## smooth the observed data
-    geom_line(data = dat2, aes(x = x, y = y), size = 0.5, colour = "#009E73") +  # smooth the prediction data
-    geom_rug(data = df, aes_string(x = imp$var[i]), sides="b", length = unit(0.05, "npc")) + 
-    theme_bw() + 
-    xlab(imp$var[i]) + 
-    ylab("") + 
-    ylim(c(4,11))
-  
+  if (!(imp$var[i] %in% categorical_vars)){
+    pd <- pdp::partial(model, pred.var = imp$var[i], pred.fun = pred_wrapper_reg, train = df)
+    pd$yhat[which(pd$yhat < 0)] <- 0  # Correction des valeurs négatives
+    
+    p <- autoplot(pd, smooth = TRUE)  
+    dat1 <- ggplot_build(p)$data[[1]]
+    dat2 <- ggplot_build(p)$data[[2]]
+    
+    
+    dens <- density(df[[imp$var[i]]])  
+    dens_fun <- approxfun(dens$x, dens$y)  
+    density_values <- dens_fun(dat1$x)  
+    
+    density_values <- density_values / max(density_values, na.rm = TRUE)  
+    
+    std_adjusted <- std_accuracy / sqrt(density_values + 1)  #
+    
+    dat1$conf_interval_lower <- dat1$y - 1.96 * std_adjusted
+    dat1$conf_interval_upper <- dat1$y + 1.96 * std_adjusted
+    if (imp$var[i] %in% exclusive) {
+    pdps[[i]] <- ggplot() + 
+      geom_point(data = dat1, aes(x = x, y = exp(y)), size = 1, fill = "black", alpha = 1) +   ## smooth the observed data
+      geom_line(data = dat2, aes(x = x, y = exp(y)), size = 0.9, colour = "red") +  # smooth the prediction data
+      geom_ribbon(data = dat1, aes(x = x, ymin = exp(conf_interval_lower), ymax = exp(conf_interval_upper)), 
+                  alpha = 0.3, fill = "salmon1") +  # Affichage des intervalles de confiance sans contraintes
+      geom_rug(data = df, aes_string(x = imp$var[i]), sides = "b", length = unit(0.05, "npc")) +
+      #ylim(c(0, )) + 
+      theme_bw() + 
+      xlab(imp$var[i]) + 
+      ylab("Number of C. obsoletus/scoticus")
+    } 
+    else {
+      pdps[[i]] <- ggplot() + 
+        geom_point(data = dat1, aes(x = x, y = exp(y)), size = 1, fill = "black", alpha = 1) +   ## smooth the observed data
+        geom_line(data = dat2, aes(x = x, y = exp(y)), size = 0.9, colour = "red") +  # smooth the prediction data
+        geom_ribbon(data = dat1, aes(x = x, ymin = exp(conf_interval_lower), ymax = exp(conf_interval_upper)), 
+                    alpha = 0.3, fill = "salmon1") +  # Affichage des intervalles de confiance sans contraintes
+        geom_rug(data = df, aes_string(x = imp$var[i]), sides = "b", length = unit(0.05, "npc")) +
+        ylim(c(0,70)) + 
+        theme_bw() + 
+        xlab(imp$var[i]) + 
+        ylab("Number of C. obsoletus/scoticus")
+    }
+  }
+  else if (imp$var[i] %in% categorical_vars){
+    pdp_cat <- pdp::partial(model, pred.var = imp$var[i], pred.fun = pred_wrapper_reg, train = df)
+    pdps[[i]] <- ggplot(pdp_cat, aes(x=factor(!!sym(imp$var[i])), y = exp(yhat))) +  # factor(x) for categorical data on x axis
+      geom_col(fill = "deepskyblue4", width=0.5) +  #barchart
+      theme_bw() + 
+      ylim(c(0,80)) +
+      #scale_y_log10() +
+      xlab(imp$var[i]) + 
+      ylab("Number of C. obsoletus/scoticus")
+  }
 }
 
 plot_pdps_abundance <- patchwork::wrap_plots(pdps) + plot_annotation(title = "Abundance model : PDP") ## To put all variables together
 
+#####
+
+pred_ice <- function(object, newdata) {
+  p <- predict(object, newdata = newdata)}
+
+
+grid <- read.csv("../../qgis/culicoides_point_locations_grid_150_150.csv")%>%
+  select(ID_SITE, ECO_CLI, Cell)
+eco_cli_colors <- c("Alpine" = "#D81B60",  "Atlantic" = "#1E88E5","Continental" = "#004D40",  "Mediterranean" = "#FFC107") 
+
+df_ids <- df %>%
+  rename(yhat.id = rowIndex)%>%
+  left_join(grid)%>%
+  select(c("yhat.id", "ECO_CLI", "year"))
+
+pdps_ice <- list()
+
+#functioning the function
+for(i in 1:length(imp$var)){
+  
+  pd <- pdp::partial(model, pred.var = imp$var[i], pred.fun = pred_ice, train = df) ## array that returns predictions of a variable in a model #train extracts the original training data
+  pd$yhat[which(pd$yhat<0)] <-0
+  pd <- pd %>%
+    group_by(yhat.id)%>%
+    mutate(yhat.centered = yhat-first(yhat)) #same concept but the predicted data after replacement with fixed feature values (with feature replacement)
+
+  pd <- pd %>%
+    left_join(df_ids) %>%
+    mutate(yhat.exp = exp(yhat.centered))
+  
+
+  if (!(imp$var[i] %in% categorical_vars)){
+    pdps_ice[[i]] <- ggplot(pd, aes_string(x=imp$var[i], y="yhat.exp", color= "ECO_CLI")) +
+      geom_line(aes(group = yhat.id), alpha = 0.6, linewidth=0.4) +
+      ylab("Change in Abundance prediction")+
+      theme_classic() +
+      scale_color_manual(values=eco_cli_colors) +
+      labs(color = "Ecoclimatic Zone") +  
+      guides(color = guide_legend(override.aes = list(linewidth = 1, alpha = 1)))  
+    
+  }}
+
+plot_ice_abundance <- patchwork::wrap_plots(pdps_ice) + 
+  plot_annotation(title = "Abundance model : Individual Conditional Expectation (ICE) plots") +
+  plot_layout(guides = "collect")
+#################################
+
+## Presence + abundance
+
+
+df_cv_presence2 <- df_cv_presence_LTO %>%
+  mutate(pred = ifelse(pred_final == "Presence",1,0)) %>%
+  dplyr::select(-pred_final) %>%
+  mutate(model = "presence_model", week=lubridate::week(as.Date(DATE)))
+
+df_cv_abundance2 <- df_cv_abundance_LTO %>%
+  mutate(obs=exp(obs),pred=exp(pred)) %>%
+  mutate(model = "abundance_model", week=lubridate::week(as.Date(DATE)))
+
+#  pour un trouple {site,week,Year} :
+# - quand le modèle de présence/absence prédit une absence, on conserve les résultats du modèle de présence
+# - quand le modèle de présence/absence prédit une présence, on conserve les résultats du modèle d'abondance
+
+df_cv_presence2 %>%
+  left_join(df_cv_abundance2, by = "idpointdecapture", suffix = c("_mod_presence","_mod_abundance")) %>%
+  mutate(obs_final = ifelse(obs_mod_presence==0, obs_mod_presence,obs_mod_abundance)) %>%
+  mutate(pred_final = ifelse(pred_mod_presence==0, pred_mod_presence,pred_mod_abundance)) %>%
+  dplyr::select(pred_final, obs_final, ID_SITE, week, year) %>%
+  rename(pred = pred_final, obs = obs_final) %>%
+  pivot_longer(c('pred','obs')) %>%
+  mutate(name = ifelse(name=="pred","Predicted","Observed")) %>%
+  mutate(date = as.Date(paste(year, week, 1, sep="-"), "%Y-%U-%u")) %>%
+  ggplot(aes(x=date, y = value, color = name, group = name)) +
+  #geom_point() +
+  geom_line() +
+  facet_wrap(.~ECO_CLI) +
+  theme_bw() +
+  scale_colour_manual(values=c("#009E73","#E69F00"),na.translate = F) +
+  ylab("mean abundance") +
+  labs(color='Number of Culicoides') +
+  theme(legend.position="bottom") +
+  ggtitle('Models : observed vs. predicted values by site and entomological survey')
