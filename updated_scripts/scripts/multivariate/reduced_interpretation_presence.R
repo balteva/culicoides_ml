@@ -265,18 +265,22 @@ for(i in 1:length(imp$var)){ #looping over each variable
       xlab(imp$var[i]) + 
       ylab("Probability of Presence") }
   else if (imp$var[i] %in% categorical_vars){#this is for plotting categorical vars, simple pdp without any modification like done for numerical
-    counts <- df %>% 
-      count(!!sym(imp$var[i]))
+    # counts <- df %>% 
+    #   count(!!sym(imp$var[i])) #doesnt work
     
     pdp_cat <- pdp::partial(model, pred.var = imp$var[i] , plot = FALSE, which.class = "Presence")
+   
+    
+    
     pdps[[i]] <- ggplot(pdp_cat, aes(x=factor(!!sym(imp$var[i])), y = yhat)) +  # factor(x) for categorical data on x axis
       geom_col(fill = "deepskyblue4", width=0.5) +
-      geom_text(data = counts, aes(x = factor(!!sym(imp$var[i])), y = 45, label = paste0("n = ", n)),  # Adjust y for text placement
-                vjust = -0.5, size = 3, fontface="bold") +
+      # geom_text(data = counts, aes(x = factor(!!sym(imp$var[i])), y = 45, label = paste0("n = ", n)),  # Adjust y for text placement
+      #           vjust = 0.6, size = 3, fontface="bold") +
       ylim(c(0, 1)) +  
       theme_bw() + 
       xlab(imp$var[i]) + 
-      ylab("Probability of Presence")
+      ylab("Probability of Presence")+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
   }
 }
 plot_pdps_presence <- patchwork::wrap_plots(pdps) + plot_annotation(title = "Partial dependence plots (Presence model)") ## put all the plots together
@@ -320,7 +324,7 @@ for(i in 1:length(imp$var)){
       ylab("Change in Presence Prediction")+
       theme_classic() +
       scale_color_manual(values=eco_cli_colors) +
-      labs(color = "Ecoclimatic Zone") +  
+      labs(color = "Ecoclimatic zone") +  
       guides(color = guide_legend(override.aes = list(linewidth = 1, alpha = 1)))  
     
   }}
@@ -350,22 +354,16 @@ plot(ia) #visualising
 
 #calculating var1 x other vars interaction strength based on previous output
 
-# SWV_int<-Interaction$new(mod, feature = "SWV_0_4", grid.size = 30)
-# 
-# plot(SWV_int)
-# 
-# EVI_int<-Interaction$new(mod, feature = "EVI_0_3", grid.size = 30)
-# 
 # plot(EVI_int)
 
 
-TN_int<-Interaction$new(mod, feature = "TN_0_0", grid.size = 30)
+NDVI_int<-Interaction$new(mod, feature = "NDVI_0_1", grid.size = 30)
 
-plot(TN_int)
+plot(NDVI_int)
 
 
 ## which var pair im analysing
-varpair <- c("TN_0_0", "ALT")  
+varpair <- c("TN_0_0", "NDVI_0_1")  
 
 ##function to predict presence probability
 pred_wrapper_classif <- function(object, newdata) { 
@@ -378,7 +376,7 @@ pd <- pdp::partial(model, pred.var = varpair, pred.fun = pred_wrapper_classif, t
 
 pd$yhat[pd$yhat < 0] <- 0
 
-plot_pdp_2D <- ggplot(pd, aes(x = TN_0_0, y = ALT, fill = yhat)) +
+plot_pdp_2D <- ggplot(pd, aes(x = TN_0_0, y = NDVI_0_1, fill = yhat)) +
   geom_tile() +
   scale_fill_viridis_c(option = "magma") +
   theme_minimal() +

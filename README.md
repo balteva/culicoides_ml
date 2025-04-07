@@ -100,11 +100,11 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 #### **Prediction Error (Weeks)**
 - If error > 0 --> model predicts too late;
 - If error < 0 --> model predicts too early
-![Performance as error in weeks](./updated_scripts/plots/interpretation/presence/reduced_vars/LLTO_error_weeks.jepg)
+![Performance as error in weeks](./updated_scripts/plots/interpretation/presence/reduced_vars/LLTO_error_weeks.jpg)
 ---
 
 #### **Variable Importance with categories**
-![Variable importance without metrics)](./updated_scripts/plots/interpretation/presence/reduced_vars/VIP_LTO.jpeg)
+![Variable importance without metrics)](./updated_scripts/plots/interpretation/presence/reduced_vars/LTO_VIP.jpeg)
 
 #### **Scaled  Variable Importance**
 ![Variable importance with scale)](./updated_scripts/plots/interpretation/presence/reduced_vars/LTO_varimp_scaled.jpeg)
