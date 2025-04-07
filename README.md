@@ -67,13 +67,13 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 
 
 ### **Potential features for the Presence/Absence model which are significantly associated with the response (presence):**
-![Plots of numerical vars for presence](./updated_scripts/plots/var_selection/presence/potential_num_vars_vs_presence.jpeg)
+![Plots of numerical vars for presence](./updated_scripts/plots/var_selection/presence/cyril/potential_num_vars_vs_presence.jpeg)
 
 ### *However, using a heatmap, we can see that a lot of them are highly correlated between each other:*
-![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/potential_num_vars_heatmap.jpeg)
+![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/cyril/potential_num_vars_heatmap.jpeg)
 
 ### **Final selection of numerical variables:**
-![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/selected_num_vars_heatmap.jpeg)
+![heatmap correlation presence](./updated_scripts/plots/var_selection/presence/cyril/selected_num_vars_heatmap.jpeg)
 
 ---
 
@@ -100,7 +100,7 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 #### **Prediction Error (Weeks)**
 - If error > 0 --> model predicts too late;
 - If error < 0 --> model predicts too early
-![Performance as error in weeks](./updated_scripts/plots/interpretation/presence/reduced_vars/LLTO_error_weeks.jpg)
+![Performance as error in weeks](./updated_scripts/plots/interpretation/presence/reduced_vars/LLTO_error_weeks.jepg)
 ---
 
 #### **Variable Importance with categories**
@@ -133,13 +133,8 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 #### *Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.*
 ---
 
-### **Water Volume in Soil interaction strength with other variables**
-<<<<<<< Updated upstream
+### **Temperature interaction strength with other variables**
 ![TN interaction](./updated_scripts/plots/interpretation/presence/reduced_vars/TN_vs_vars_interaction.jpeg)
-=======
-![SWV interaction](./updated_scripts/plots/interpretation/presence/reduced_vars/TN_vs_vars_interaction.jpeg)
->>>>>>> Stashed changes
----
 
 ### **2D Partial Depenence Plot**
 ![2D PDP](./updated_scripts/plots/interpretation/presence/reduced_vars/2D_pdp_tn_vs_alt.jpeg)
@@ -191,11 +186,7 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 ### **2D Partial Depenence Plot**
 ![2D PDP](./updated_scripts/plots/interpretation/presence/2D_PDP_SWV_BETAIL.jpeg)
 #### *Shows how presence probability is affected through the interaction of livestock density and soil moisture*
-<<<<<<< Updated upstream
---- -->
-=======
 ---
->>>>>>> Stashed changes
 
 ## Roadmap of the **Culicoides project**
 
