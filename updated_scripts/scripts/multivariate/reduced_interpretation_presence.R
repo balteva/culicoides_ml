@@ -32,7 +32,7 @@ eco_cli_colors <- c("Alpine" = "#faa09b", "Atlantic" = "#c8e18d", "Continental" 
 
 # LTO == "maroon2"
 # LLO == "deepskyblue3"
-plot_eval_presence_model_LTO <- df_cv_presence_LLO %>%
+plot_eval_presence_model_LTO <- df_cv_presence_LTO %>%
   mutate(DATE=as.Date(DATE))%>%
   mutate(year=lubridate::year(DATE), week=lubridate::week(DATE))%>%
   dplyr::group_by(year,week) %>% #ECO_CLI,   
@@ -45,11 +45,11 @@ plot_eval_presence_model_LTO <- df_cv_presence_LLO %>%
   geom_line(linewidth=0.8) + 
   facet_wrap(~year, scales = "free") + #~ECO_CLI
   theme_bw() + 
-  scale_colour_manual(values=c("grey70","deepskyblue3"),na.translate = F) + 
+  scale_colour_manual(values=c("grey70","maroon2"),na.translate = F) + 
   scale_x_continuous(breaks = seq(4,52,4)) +
   xlab("week") +
   ylab("∑ Presence probability") + 
-  labs(color = expression("Probability of presence of " * italic("C. obsoletus") * " and " * italic("C. scoticus") * " by year (LLO CV)")) + 
+  labs(color = expression("Probability of presence of " * italic("C. obsoletus") * " and " * italic("C. scoticus") * " by year (LTO CV)")) + 
   ggtitle('Presence models : observed vs. predicted values')+
   theme(axis.title.x = element_text(size = 12, face="bold"),
       axis.title.y = element_text(size = 12, face="bold"),
@@ -62,7 +62,7 @@ plot_eval_presence_model_LTO <- df_cv_presence_LLO %>%
 binary_plot_LLO <- df_cv_presence_LLO %>%
   mutate(DATE=as.Date(DATE))%>%
   mutate(year=lubridate::year(DATE), week=lubridate::week(DATE))%>%
-  dplyr::group_by(year,week) %>%#ECO_CLI,
+  dplyr::group_by(ECO_CLI,year,week) %>%#ECO_CLI,
   dplyr::summarise(pred = mean(pred), obs = mean(obs)) %>% ## to sum up, grouping week, year and ecoclimatic zone 
   mutate(Prediction = if_else(pred >= 0.5, "1", "0"), Observation = if_else(obs >= 0.5, "1", "0"))%>%
   # mutate(ECO_CLI = case_when(ECO_CLI == "Atlantic" ~ "Atlan.",
@@ -74,7 +74,7 @@ binary_plot_LLO <- df_cv_presence_LLO %>%
   ggplot(aes(x=week, y = Type, fill = PresenceStatus)) +
   geom_tile()+
   coord_fixed(ratio =4) +
-  facet_wrap(~year, scales="fixed", ncol=1) +#~ECO_CLI
+  facet_wrap(~ECO_CLI~year, scales="fixed") +#~ECO_CLI #ncol=1
   theme_minimal() + 
   scale_x_continuous(breaks = seq(2, 52, 4)) +
   scale_fill_manual(values = c("0" = "#4682B4", "1" = "#FF6347"), labels =c("Absence", "Presence"))+
@@ -83,7 +83,7 @@ binary_plot_LLO <- df_cv_presence_LLO %>%
   theme(legend.position="bottom", strip.text=element_text(face="bold", size=10),
         plot.title = element_text(hjust = 0.5, size= 15, face='bold'),
         axis.title.x = element_text(size=12, face="bold"),  axis.title.y = element_text(size=12, face="bold")) + 
-  ggtitle(expression("Predictions of " * italic("C. obsoletus") * " and " * italic("C. scoticus") * " presence by year (LLO CV)"))
+  ggtitle(expression("Predictions of " * italic("C. obsoletus") * " and " * italic("C. scoticus") * " presence by year and ecoclimatic zone (LLO CV)"))
 
 
 #####
@@ -98,7 +98,7 @@ df_fin_cv<-merge(df_cv_presence_LLO, df_LTO_presence, by="idpointdecapture")%>%
 # LTO == "maroon2"
 # LLO == "deepskyblue3"
 plot_eval_presence_model <- df_fin_cv %>%
-  dplyr::group_by(ECO_CLI,year, week) %>%   #ECO_CLI,
+  dplyr::group_by(year, week) %>%   #ECO_CLI,
   dplyr::summarise(pred = mean(pred), obs = mean(obs), pred_year=mean(pred_year)) %>%
   as_tibble() %>%
   pivot_longer(c('pred','obs', 'pred_year')) %>%
@@ -106,7 +106,7 @@ plot_eval_presence_model <- df_fin_cv %>%
   ggplot(aes(x=week, y = value, color = name)) +
   #geom_point() + 
   geom_line(linewidth=1) + 
-  facet_wrap(~ECO_CLI~year, scales = "free") + #~ECO_CLI
+  facet_wrap(~year, scales = "free") + #~ECO_CLI
   theme_bw() + 
   scale_colour_manual(values=c("grey70","deepskyblue3","maroon2"),na.translate = F) + 
   scale_x_continuous(breaks = seq(2,52,4)) +
@@ -117,7 +117,7 @@ plot_eval_presence_model <- df_fin_cv %>%
         axis.title.y = element_text(size = 12, face="bold"),
         legend.position="bottom",
         plot.title = element_text(hjust = 0.5, size= 14, face='bold'))+
-  ggtitle(expression("Probability of presence of " *italic("C. obsoletus")* " and " *italic( "C. scoticus ")* "by ecoclimatic zone and year"))
+  ggtitle(expression("Probability of presence of " *italic("C. obsoletus")* " and " *italic( "C. scoticus ")* "by year"))
 
 
 
@@ -162,8 +162,12 @@ model <- multiv_model_presence_LTO$model #model details (mtrees, specificity, se
 df <- multiv_model_presence_LTO$df_mod #og dataframe
 df_cv <-  multiv_model_presence_LTO$df_cv #og data frame with predictions
 
+fold_results <- model$resample #addition to have error marges
+mean_accuracy <- mean(fold_results$ROC)
+std_accuracy <- sd(fold_results$ROC)
+
 ##easier to understand importace measure
-importance <- varImp(model, scale=F)
+importance <- varImp(model, scale=T)
 plot(importance) 
 
 ##################
@@ -238,18 +242,37 @@ for(i in 1:length(imp$var)){ #looping over each variable
     p <- autoplot(pd, smooth = T)  
     dat1 <- ggplot_build(p)$data[[1]]#ggplot_build reverse engineers data from a plot and give all info including data. here im accessing the first layer  which is original feature values and original observatins
     dat2 <- ggplot_build(p)$data[[2]] #same concept but the predicted data after replacement with fixed feature values (with feature replacement)
+    
+    dens <- density(df[[imp$var[i]]])  
+    dens_fun <- approxfun(dens$x, dens$y)  
+    density_values <- dens_fun(dat1$x)  
+    density_values <- density_values / max(density_values, na.rm = TRUE)
+    std_adjusted <- std_accuracy / sqrt(density_values + 1)
+    
+    dat1$conf_interval_lower <- pmax(pmin(dat1$y - 1.96 * std_adjusted, 1), 0)
+    dat1$conf_interval_upper <- pmax(pmin(dat1$y + 1.96 * std_adjusted, 1), 0)
+    
+    
+    
     pdps[[i]] <- ggplot() + 
       geom_point(data = dat1, aes(x = x, y = y), size = 1, colour = "black", alpha = 1) +  ## plotting the observed data
       geom_line(data = dat2, aes(x = x, y = y), size = 0.9, colour = "red") +  ## plotting the predicted data
+      geom_ribbon(data = dat1, aes(x = x, ymin = conf_interval_lower, ymax = conf_interval_upper), ## smooth the prediction data
+                  alpha = 0.2, fill = "maroon2") + 
       geom_rug(data = df, aes_string(x = imp$var[i]), sides="b", length = unit(0.05, "npc")) + 
       ylim(c(0,1)) + 
       theme_bw() + 
       xlab(imp$var[i]) + 
       ylab("Probability of Presence") }
   else if (imp$var[i] %in% categorical_vars){#this is for plotting categorical vars, simple pdp without any modification like done for numerical
+    counts <- df %>% 
+      count(!!sym(imp$var[i]))
+    
     pdp_cat <- pdp::partial(model, pred.var = imp$var[i] , plot = FALSE, which.class = "Presence")
     pdps[[i]] <- ggplot(pdp_cat, aes(x=factor(!!sym(imp$var[i])), y = yhat)) +  # factor(x) for categorical data on x axis
-      geom_col(fill = "deepskyblue4", width=0.5) +  #barchart
+      geom_col(fill = "deepskyblue4", width=0.5) +
+      geom_text(data = counts, aes(x = factor(!!sym(imp$var[i])), y = 45, label = paste0("n = ", n)),  # Adjust y for text placement
+                vjust = -0.5, size = 3, fontface="bold") +
       ylim(c(0, 1)) +  
       theme_bw() + 
       xlab(imp$var[i]) + 

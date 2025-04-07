@@ -314,11 +314,14 @@ saveRDS(res_multiv_model_presence_LTO,"./updated_scripts/models/RF_model_presenc
 
 ##### First step: select variables for abundance models
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 categ_abundance_vars <- c("ELEV_OVIN", "ELEV_CAPRIN", "ACTIV_VIANDE","ANIMAUXFIN",
                           "VENTFIN",	 "VENTDEBUT",
                           "PLUIEFIN","PLUIEDEBUT",
                           "OUVERTURE_BAT", "CLC_level2")
 =======
+=======
+>>>>>>> Stashed changes
 categ_abundance_vars <- c("VENTDEBUT", "PLUIEDEBUT", 
                           #"PLUIEFIN",
                           #"ANIMAUXFIN",
@@ -328,6 +331,9 @@ categ_abundance_vars <- c("VENTDEBUT", "PLUIEDEBUT",
                           #"ACTIV_VIANDE",
                           #"CLC_level2",
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 

@@ -134,7 +134,11 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 ---
 
 ### **Water Volume in Soil interaction strength with other variables**
+<<<<<<< Updated upstream
 ![TN interaction](./updated_scripts/plots/interpretation/presence/reduced_vars/TN_vs_vars_interaction.jpeg)
+=======
+![SWV interaction](./updated_scripts/plots/interpretation/presence/reduced_vars/TN_vs_vars_interaction.jpeg)
+>>>>>>> Stashed changes
 ---
 
 ### **2D Partial Depenence Plot**
@@ -187,7 +191,11 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 ### **2D Partial Depenence Plot**
 ![2D PDP](./updated_scripts/plots/interpretation/presence/2D_PDP_SWV_BETAIL.jpeg)
 #### *Shows how presence probability is affected through the interaction of livestock density and soil moisture*
+<<<<<<< Updated upstream
 --- -->
+=======
+---
+>>>>>>> Stashed changes
 
 ## Roadmap of the **Culicoides project**
 
