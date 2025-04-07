@@ -77,37 +77,37 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 
 ---
 
-## Model output and Evaluation
+## Presence output and evaluation 
 ---
 ### **1. Presence Model Predictions**
 #### **Observed vs. Predicted (2009-2012, LTO CV)**
-![binary presence LTO output](./updated_scripts/plots/interpretation/presence/LTO_binary.jpeg)
+![binary presence LTO output](./updated_scripts/plots/interpretation/presence/reduced_vars/LTO_binary.jpeg)
 ---
 #### **With Ecolimatic zones**
-![binary presence LTO with ecoclimatic zones](./updated_scripts/plots/interpretation/presence/ECO_CLI/LTO_binary_ecocli.jpeg)
+![binary presence LTO with ecoclimatic zones](./updated_scripts/plots/interpretation/presence/reduced_vars/ECO_CLI/LTO_binary_ecocli.jpeg)
 ---
 #### **Observed vs. Predicted probabilities for presence (2009 - 2012 LTO CV)**
-![presence probability LTO](./updated_scripts/plots/interpretation/presence/LTO_probability.jpeg)
+![presence probability LTO](./updated_scripts/plots/interpretation/presence/reduced_vars/LTO_probability.jpeg)
 
 #### **Comparing presence model with LTO and LLO CV**
-![presence probabilitY LTO vs LLO](./updated_scripts/plots/interpretation/presence/LLTO_probability.jpeg)
+![presence probabilitY LTO vs LLO](./updated_scripts/plots/interpretation/presence/reduced_vars/LLTO_probability.jpeg)
 ---
 
 ### **2. Model Performance Metrics**
 ####  **ROC Curve for LLO & LTO Models**
-![ROC Curve](./updated_scripts/plots/interpretation/presence/ROC.jpeg)
+![ROC Curve](./updated_scripts/plots/interpretation/presence/reduced_vars/ROC.jpeg)
 ---
 #### **Prediction Error (Weeks)**
 - If error > 0 --> model predicts too late;
 - If error < 0 --> model predicts too early
-![Performance as error in weeks](./updated_scripts/plots/interpretation/presence/LLTO_error_weeks.jpg)
+![Performance as error in weeks](./updated_scripts/plots/interpretation/presence/reduced_vars/LLTO_error_weeks.jpg)
 ---
 
 #### **Variable Importance with categories**
-![Variable importance without metrics)](./updated_scripts/plots/interpretation/presence/LTO_VIP.jpeg)
+![Variable importance without metrics)](./updated_scripts/plots/interpretation/presence/reduced_vars/VIP_LTO.jpeg)
 
 #### **Scaled  Variable Importance**
-![Variable importance with scale)](./updated_scripts/plots/interpretation/presence/LTO_varimp_scaled.jpeg)
+![Variable importance with scale)](./updated_scripts/plots/interpretation/presence/reduced_vars/LTO_varimp_scaled.jpeg)
 
 ---
 ## **Variable Interaction Analysis**
@@ -118,6 +118,53 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 - ICE shows how each individual instance's prediction changes when varying one feature's values
 - PDP's show the average predction of all instances.
 - Feature Interaction plots assessed with **H-statistic** which measures feature interaction strength
+- **0 = no interaction, 1 = full interaction**
+
+### **Partial Dependence Plot (PDP)**
+![Presence PDPs)](./updated_scripts/plots/interpretation/presence/reduced_vars/LTO_PDP.jpeg)
+---
+### **Centered ICE-c plots.**
+![ICE - centered with Ecoclim. zones)](./updated_scripts/plots/interpretation/presence/reduced_vars/LTO_ice_c.jpeg)
+####  *By separating different ecoclimatic regions, we see that the response to differing predictor values is heterogenous for each instance (i.e. for each prediction), indicating that some feature interaction.*
+---
+
+### **Variable interaction analysis with H-statistic**
+![Feature interaction](./updated_scripts/plots/interpretation/presence/reduced_vars/LTO_feature_interaction.jpeg)
+#### *Ex: H-stat of 0.3 indicates that 30% of its influence on the presence/absence prediction comes from interactions with other features, while 70% comes from its independent effect.*
+---
+
+### **Water Volume in Soil interaction strength with other variables**
+![TN interaction](./updated_scripts/plots/interpretation/presence/reduced_vars/TN_vs_vars_interaction.jpeg)
+---
+
+### **2D Partial Depenence Plot**
+![2D PDP](./updated_scripts/plots/interpretation/presence/reduced_vars/2D_pdp_tn_vs_alt.jpeg)
+#### *Shows how presence probability is affected through the interaction of livestock density and soil moisture*
+---
+## Abundance model output and evaluation 
+---
+### **1. Abundance Model Predictions**
+#### **Observed vs. Predicted (2009-2012, LTO CV)**
+![abundance abundance LTO output](./updated_scripts/plots/interpretation/abundance/reduced_vars/LTO.jpeg)
+---
+#### **With Ecolimatic zones**
+![abundance LTO with ecoclimatic zones](./updated_scripts/plots/interpretation/abundance/reduced_vars/ECO_CLI/LTO_ecocli.jpeg)
+---
+#### **Comparing and evaluating abundance model with LTO and LLO CV**
+![abundance LTO vs LLO](./updated_scripts/plots/interpretation/abundance/reduced_vars/LLTO_eval.jpeg)
+---
+#### **Variable Importance with categories**
+![Variable importance without metrics)](./updated_scripts/plots/interpretation/abundance/reduced_vars/LTO_VIP.jpeg)
+
+#### **Scaled  Variable Importance**
+![Variable importance with scale)](./updated_scripts/plots/interpretation/abundance/reduced_vars/LTO_varImp_scaled.jpeg)
+
+---
+<!-- ## **Variable Interaction Analysis**
+- Partial Dependence Plots (PDPs)
+- Individual Conditional Expectation (ICE)
+**PDPs and ICE show how  prediction changes when varying one predictor while keeping all other features fixed**
+#### **Main difference:** 
 - **0 = no interaction, 1 = full interaction**
 
 ### **Partial Dependence Plot (PDP)**
@@ -140,8 +187,7 @@ Cross Correlation Maps indicate the which meteorological variable time lags are 
 ### **2D Partial Depenence Plot**
 ![2D PDP](./updated_scripts/plots/interpretation/presence/2D_PDP_SWV_BETAIL.jpeg)
 #### *Shows how presence probability is affected through the interaction of livestock density and soil moisture*
----
-
+--- -->
 
 ## Roadmap of the **Culicoides project**
 

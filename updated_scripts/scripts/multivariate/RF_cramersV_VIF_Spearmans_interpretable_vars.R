@@ -313,10 +313,22 @@ saveRDS(res_multiv_model_presence_LTO,"./updated_scripts/models/RF_model_presenc
 	
 
 ##### First step: select variables for abundance models
+<<<<<<< Updated upstream
 categ_abundance_vars <- c("ELEV_OVIN", "ELEV_CAPRIN", "ACTIV_VIANDE","ANIMAUXFIN",
                           "VENTFIN",	 "VENTDEBUT",
                           "PLUIEFIN","PLUIEDEBUT",
                           "OUVERTURE_BAT", "CLC_level2")
+=======
+categ_abundance_vars <- c("VENTDEBUT", "PLUIEDEBUT", 
+                          #"PLUIEFIN",
+                          #"ANIMAUXFIN",
+                          "ELEV_OVIN", 
+                          "OUVERTURE_BAT")
+                          #"ELEV_CAPRIN",
+                          #"ACTIV_VIANDE",
+                          #"CLC_level2",
+
+>>>>>>> Stashed changes
 
 
 categ_abundance_df <- df_combined %>%
@@ -324,16 +336,16 @@ categ_abundance_df <- df_combined %>%
   mutate(across(everything(), as.factor)) %>%
   na.omit()
 
-fishers_func_categorical(categ_abundance_df, categ_abundance_vars, "./updated_scripts/data/significance_tests/obscot_abundance_fishers.txt")
+fishers_func_categorical(categ_abundance_df, categ_abundance_vars, "./updated_scripts/data/significance_tests/more_reduced_obscot_abundance_fishers.txt")
 #look at file to select non corr variables ( p > 0.05)
 #VENTFIN et ACTIV_VIANDE, VENTDEBUT et ANIMAUXFIN, PLUIEDEBUT et ACTIV_VIANDE, PLUIEDEBUT et CLC, PLUIEDEBUT et ELEV_OVIN, PLUIEFIN et ACTIV_VIANDE, PLUIEFIN et CLC
 
 cramers_vars_abundance <- cramersv_function(categ_abundance_df, categ_abundance_vars)
 strong_assoc_vars <- cramers_vars_abundance %>%
-  filter(CramersV >= 0.2)
+  filter(CramersV >= 0.15)
 
 weak_assoc_vars <- cramers_vars_abundance %>%
-  filter(CramersV <= 0.2)
+  filter(CramersV <= 0.15)
 
 #ANIMAUXFIN, ELEV_OVIN or ACTIV_VIANDE, OUVERTURE_BAT, PLUIEDEBUT, VENTFIN 
 #or could do CLC instead of ACTIV_VIANDE + ELEV_OVIN +OUVERTURE_BAT
@@ -345,18 +357,20 @@ weak_assoc_vars <- cramers_vars_abundance %>%
 #except for elev_ovin
 
 #filtered_categ_abundance_vars <-("ELEV_OVIN")
-filtered_categ_abundance_vars <-c ("ELEV_OVIN", "PLUIEDEBUT", "VENTDEBUT", "CLC_level2") #but remove ALT from numerical
+filtered_categ_abundance_vars <-c ("ELEV_OVIN", "PLUIEDEBUT") #but remove ALT from numerical
 
 ### Numerical var selection
 numeric_abundance_vars <- c("TM_0_0",	"TM_0_1", #average temperature
                             "TN_0_0",	"TN_0_2",#min temp
-                            "TX_0_0",	"TX_0_2", #max temp
-                            "UM_0_0",	"UM_0_1", #relative humiditty #will probably remove relative humidity
-                            "TPS_0_0", "TPS_0_1", #soil temperature
-                            #"QQ_0_5",	"QQ_1_5", #solar radiation
+                            "TX_0_0",	"TX_0_3", #max temp
+                            #"UM_0_0",	"UM_0_1", #relative humiditty #will probably remove relative humidity
+                            "TPS_0_0", "TPS_0_2", #soil temperature
+                            #"QQ_0_5",	 #solar radiation
                             #"PP_3_3",	"PP_1_5", #photoperiod
-                            "EVI_0_6","EVI_1_5",
-                            "SWV_0_0", #water volume in soil
+                            "SWV_0_0", "SWV_0_3",#water volume in soil
+                            "FG_0_3", "FG_0_1",
+                            "EVI_0_6","EVI_0_4",
+                            "NDVI_0_5", 
                             "ALT") #"TEMPERATUREDEBUT", "TEMPERATUREFIN", "TEMPMINI", "TEMPMAX"
                             
                           
@@ -364,7 +378,7 @@ numeric_abundance_vars <- c("TM_0_0",	"TM_0_1", #average temperature
                             
                             
 df_model_numerical <- df_model %>%
-  filter(!is.na(ALT), !is.na(EVI_0_6), !is.na(EVI_1_5))
+  filter(!is.na(ALT), !is.na(EVI_0_6), !is.na(EVI_0_4), !is.na(NDVI_0_5))
 
 m <- cor(df_model_numerical[,numeric_abundance_vars], method = "pearson", use = "pairwise.complete.obs")
 index <- which(abs(m) > 0.7 & abs(m) < 1,arr.ind = T) 
@@ -385,7 +399,10 @@ variables_abond_corselect_fin<-variables_abond_corselect$selected.vars
 
 
 #filtered_numer_abundance_vars <- c("TX_0_0",  "EVI_1_5", "SWV_0_0", "ALT")
-filtered_numer_abundance_vars <- c("TX_0_0",  "EVI_1_5", "SWV_0_0") #if i want CLC and VENTDEBUT and PLUIEDEBUT
+#filtered_numer_abundance_vars <- c("TX_0_0",  "EVI_1_5", "SWV_0_0") #if i want CLC and VENTDEBUT and PLUIEDEBUT
+#reduced model selected vars
+filtered_numer_abundance_vars <- c("TX_0_0","SWV_0_3","FG_0_1","NDVI_0_5")#removed ALT bcs corr with CLC
+filtered_numer_abundance_vars <- c("TX_0_0",   "SWV_0_0",  "FG_0_1",   "NDVI_0_5", "ALT" )
 predictors_abundance <- c(filtered_numer_abundance_vars, filtered_categ_abundance_vars)
 
 #### Final data frame for the multivariate analysis
@@ -394,7 +411,7 @@ df_model_abundance <- df_model %>%
   filter(NBINDIV>0) %>%
   dplyr::select("idpointdecapture", "ID_SITE","DATE","ECO_CLI","Cell", "year", "NBINDIV", "PRES_CUL", predictors_abundance)%>%
   mutate(across(ID_SITE:year, as.factor))%>%
-  filter(!is.na(ELEV_OVIN), !is.na(EVI_1_5), !is.na(PLUIEDEBUT), !is.na(VENTDEBUT))
+  filter(!is.na(NDVI_0_5), !is.na(ELEV_OVIN), !is.na(PLUIEDEBUT), !is.na(FG_0_1))
 
 #nrow before filtering =8847 ; after filtering n=7227
 
@@ -428,7 +445,7 @@ df_cv_abundance_LLO <- mod_abundance_LLO$pred %>%
   dplyr::select(pred,obs,Cell,idpointdecapture, ID_SITE, ECO_CLI, DATE, year)
 
 res_multiv_model_abundance_LLO <- list(model = mod_abundance_LLO, df_cv = df_cv_abundance_LLO, df_mod = df_model_abundance) ## to save models, data frame of the model and predictions
-saveRDS(res_multiv_model_abundance_LLO, "./updated_scripts/models/RF_model_abundance_LLO_interpretation_clc.rds")
+saveRDS(res_multiv_model_abundance_LLO, "./updated_scripts/models/reduced_RF_model_abundance_LLO_interpretation_alt.rds")
 
 #### Additionnal step: same method but with a cross validation with the numero of sampling session 
 
@@ -454,7 +471,7 @@ df_cv_abundance_LTO <- mod_abundance_LTO$pred %>%
   dplyr::select(pred,obs,Cell,idpointdecapture, ID_SITE, ECO_CLI, DATE, year)
 
 res_multiv_model_abundance_LTO <- list(model = mod_abundance_LTO, df_cv = df_cv_abundance_LTO, df_mod = df_model_abundance)  ## to save models, data frame of the model and predictions
-saveRDS(res_multiv_model_abundance_LTO,"./updated_scripts/models/RF_model_abundance_LTO_interpretation_clc.rds")
+saveRDS(res_multiv_model_abundance_LTO,"./updated_scripts/models/reduced_RF_model_abundance_LTO_interpretation_alt.rds")
 
 
 
