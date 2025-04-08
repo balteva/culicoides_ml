@@ -5,17 +5,17 @@ library(patchwork)
  
 
 #loading collection data
-data <- read.delim("./data/occurrence.txt", header = TRUE) %>%
+data <- read.delim("./datapaper/data/occurrence.txt", header = TRUE) %>%
   select(id, individualCount, organismQuantityType, sex, reproductiveCondition, occurrenceStatus, scientificName, taxonRank)
 #loading collection details (date, location, region)
-event <- read.delim("./data/event.txt", header = TRUE) %>%
+event <- read.delim("./datapaper/data/event.txt", header = TRUE) %>%
   select(id, eventDate,startDayOfYear,month,year, habitat, locationID, stateProvince ,decimalLatitude, decimalLongitude)%>%
   mutate(date = as.Date(startDayOfYear - 1, origin = paste0(year, "-01-01")))
 
 df_indiv <- data %>%
   left_join(event, by="id") %>%
   select(-c(eventDate, startDayOfYear)) %>%
-  #filter(!occurrenceStatus == "absent")%>%#i dont dilter by this but summarise based on species id site and date
+  filter(!occurrenceStatus == "absent")%>%#i dont dilter by this but summarise based on species id site and date. however, need to filter out absent observations for median
   relocate(stateProvince, locationID,date, .after= id) %>%
   filter(organismQuantityType=="individuals")%>% #select organism type of interest (i.e. all type, only female, female, only parous female etc)
   select(-c(sex, reproductiveCondition))
@@ -29,7 +29,11 @@ species_of_interest <- c("obsoletus/scoticus", "punctatus", "pulicaris", "newste
 df_main_species <- df_indiv %>%
   mutate(scientificName = case_when( !(scientificName %in% species_of_interest) ~ "other species", TRUE ~ scientificName))%>%
   mutate(scientificName = recode(scientificName, "punctatus" = "pulicaris and punctatus",
-                                 "pulicaris" = "pulicaris and punctatus")) 
+                                 "pulicaris" = "pulicaris and punctatus")) %>%
+  group_by(locationID, date,year, scientificName) %>%
+  summarise(mean_trap= sum(individualCount), .groups = "drop")%>%#not calculating the mean ,just renaming for functions
+  mutate(week=week(date), month=month(date))
+
 
 #summarising into mean counts per trap for each species
 df_summary <- df_main_species%>%
@@ -41,11 +45,102 @@ df_summary1<- df_main_species%>%
   mutate(scientificName = "all species")%>%
   group_by(scientificName, date, year)%>%
   summarise(mean_trap = mean(individualCount), .groups = "drop")%>% #and upending df with mean counts per species
-  bind_rows(df_summary) 
+  bind_rows(df_summary)
 #df_summary1 will be the df used for plotting species specific data visualisation + for all culicoides 
  
+
+
+df_summary_median <- df_main_species %>%
+  group_by(scientificName, week, year) %>%
+  summarise(mean_abundance = mean(individualCount),
+    median_abundance = median(individualCount),
+    q1 = quantile(individualCount, 0.25),
+    q2 = quantile(individualCount, 0.75),
+    .groups = "drop")
+
+
+## manual function
+df_summary_median %>%
+  filter(scientificName == "obsoletus/scoticus") %>%
+  ggplot(aes(x = week, y = median_abundance)) +
+  geom_ribbon(aes(ymin = q1, ymax = q2, fill = "Central Range (25–75%)"), alpha = 0.7) +
+  geom_point(aes(y = mean_abundance, shape = "Mean"), size = 0.5, stroke = 0.8, color = "black", alpha = 0.9) +
+  geom_line(aes(y = median_abundance, color = "Median"), linewidth = 0.8, alpha = 0.9) +
+  scale_x_continuous(breaks=seq(2, 52, 6))+
+  labs(title = paste0("Number of C.obsoletus/scoticus caught per trap"),
+       y = "Abundance per trap",
+       x = "Week of the year") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(), 
+        axis.title.x = element_text(size = 10, face="bold"),
+        axis.title.y = element_text(size = 10, face="bold"),
+        plot.title = element_text(hjust = 0.5, size= 12, face="bold"),
+        axis.text.x = element_text(size=10),
+        axis.text.y = element_text(size=10),
+        strip.text=element_text(size=10,face="bold"))+
+  scale_fill_manual(values = c("Central Range (25–75%)" = "deepskyblue2")) +
+  scale_color_manual(values = c("Median" = "deepskyblue4")) +
+  scale_shape_manual(values = c("Mean" = 1))+
+  facet_wrap(~year, ncol=2)
+
+
+
+####function for temporal plots
+temporal_func <- function(df, var){
+  
+  df_summary <- df %>%
+    group_by(scientificName, week, year) %>%
+    summarise(mean_abundance = mean(individualCount),
+              median_abundance = median(individualCount),
+              q1 = quantile(individualCount, 0.25),
+              q2 = quantile(individualCount, 0.75),
+              .groups = "drop")
+  
+  plots <- list() 
+  for (i in unique(df[[var]])) {  
+    df_temp <- df %>%
+      filter(.data[[var]] == i)
+    
+    df_temp_summary <- df_summary %>%
+      filter(.data[[var]] == i)
+    
+    
+    plot <- df_temp_summary%>%
+      ggplot(aes(x = week, y = median_abundance)) +
+      geom_ribbon(aes(ymin = q1, ymax = q2, fill = "Central Range (25–75%)"), alpha = 0.7) +
+      geom_point(aes(y = mean_abundance, shape = "Mean"), size = 0.5, stroke = 0.8, color = "black", alpha = 0.9) +
+      geom_line(aes(y = median_abundance, color = "Median"), linewidth = 0.8, alpha = 0.9) +
+      scale_x_continuous(breaks=seq(2, 52, 6))+
+      labs(title = paste0("Number of ", i, " caught per trap"),
+           y = "Abundance per trap",
+           x = "Week of the year") +
+      theme_minimal() +
+      theme(legend.position = "bottom",
+            legend.title = element_blank(), 
+            axis.title.x = element_text(size = 10, face="bold"),
+            axis.title.y = element_text(size = 10, face="bold"),
+            plot.title = element_text(hjust = 0.5, size= 12, face="bold"),
+            axis.text.x = element_text(size=10),
+            axis.text.y = element_text(size=10),
+            strip.text=element_text(size=10,face="bold"))+
+      scale_fill_manual(values = c("Central Range (25–75%)" = "deepskyblue2")) +
+      scale_color_manual(values = c("Median" = "deepskyblue4")) +
+      scale_shape_manual(values = c("Mean" = 1))+
+      facet_wrap(~year, ncol=2)
+    
+    plots[[i]] <- plot
+  }
+  return(plots)
+}
+
+
+plots <- temporal_func(df_main_species, "scientificName")
+plots_all <- patchwork::wrap_plots(plots, ncol = 3) + plot_layout(guides = "collect")
+
+
 ### PLOTS
-#Temporal function
+#Temporal function (old)
 
 #usage : df = dataframe with mean counts per, var = column with species identity
 
@@ -62,9 +157,10 @@ temporal_func <- function(df, var){
       #scale_y_log10(labels = label_number()) +
       #facet_wrap(~scientificName, scales="fixed", ncol=3) +
       #facet_grid(~year, scales="fixed")+#, ncol=2) +
-      labs(title = paste0("Mean counts per trap of ",  df_temp[[var]]),
+      labs(title = bquote("Mean counts per trap of C. " * italic(.(df_temp[[var]]))),
            x = "year",
-           y = "indiv. counted") + #color = "species") +
+           y = "indiv. counted"
+      ) + #color = "species") +
       #y = "indiv. counted (log scale)", color = "species") +
       theme_minimal() +
       theme(axis.title.x = element_text(size = 10, face="bold"),
@@ -115,28 +211,29 @@ boxplot_func <- function(df, var){
       filter(df[[var]] == i)
     
     plot <- df_temp%>%
-      ggplot( aes(x=as.factor(month(date)), y=mean_trap, fill= year)) +
+      ggplot( aes(x=as.factor(month(date)), y=mean_trap, fill=as.factor(year))) +
       geom_boxplot(outliers= F)  + #removing outliers
       theme_minimal() +
       theme(
         legend.position="none",
         plot.title = element_text(size=13, hjust = 0.5, face="bold")) + 
+      scale_fill_brewer(palette = "Dark2")+
       xlab("month") +
       ylab("indiv. counted") +
-      labs(title = paste0("Boxplot of mean counts per trap of ",df_temp[[var]])) +
-      theme(plot.title = element_text(hjust = 0.5, face="bold"),
+      labs(title = paste0("Boxplot of counts per trap of ",df_temp[[var]])) +
+      theme(plot.title = element_text(hjust = 0.5, face="bold", size=9),
             axis.text.x = element_text(size=9),
             axis.text.y = element_text(size=9),
-            axis.title.x = element_text(size=10, face="bold"),
-            axis.title.y = element_text(size=10, face="bold"),
-            strip.text=element_text(size=10,face="bold"))+
+            axis.title.x = element_text(size=8, face="bold"),
+            axis.title.y = element_text(size=8, face="bold"),
+            strip.text=element_text(size=8,face="bold"))+
       facet_wrap(~year,scales="fixed")
     
     plots[[i]] <- plot
   }
   return(plots)
 }
-plots <- boxplot_func(df_summary1, "scientificName")
+plots <- boxplot_func(df_main_species, "scientificName")
 plots_all <- patchwork::wrap_plots(plots, ncol = 3) + plot_layout(guides = "collect")
 
 # manual boxplot. Will show mean count distribution counts during the enitire year (and not per month)
