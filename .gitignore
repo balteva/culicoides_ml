@@ -4,6 +4,10 @@
 .Ruserdata
 modeling_with_errors/*
 scripts/*
-updated_scripts/data/*.csv
-updated_scripts/models/*
+updated_scripts/training_interpretation/data/*.csv
+updated_scripts/training_interpretation/models/*
 datapaper/data/*
+datapaper/france/*
+updated_scripts/simulations_projections/new_data/*
+updated_scripts/simulations_projections/projections/abundance_predictions/*
+updated_scripts/simulations_projections/projections/presence_predictions/*
