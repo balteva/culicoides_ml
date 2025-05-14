@@ -2,7 +2,7 @@
 
 
 df_indiv <- data %>%
-  left_join(event, by="id") %>%
+  left_join(event, by="eventID") %>%
   select(-c(eventDate, startDayOfYear)) %>%
   filter(!occurrenceStatus == "absent")%>%
   relocate(stateProvince, locationID,date, .after= id)
@@ -19,25 +19,25 @@ yr2009 <- session_summary%>%
 # 3 491115 for 2010
 # 2 461477 for 2011
 # 0 161950 for 2012
-trap_info <- df_indiv %>%
-  select(year, date, locationID, habitat, decimalLatitude, decimalLongitude)%>%
-  group_by(year, date, locationID, habitat, decimalLatitude, decimalLongitude)%>%
-  slice_head(n = 1) %>%  
-  ungroup()%>%
+trap_info2 <- df_indiv %>%
+  select(year, date, locationID)%>%
+  distinct()%>%
   mutate(week=week(date))%>%
   group_by(year, week)%>%
   summarise(trap_count=n(), .groups="drop")
 
+selected_colors1 <- c("#31a354", "#7fcdbb", "deepskyblue3","#253494" )
 
-
-ggplot(trap_info, aes(x=week, y=trap_count, fill=as.factor(year)))+
+ggplot(trap_info2, aes(x=week, y=trap_count, fill=as.factor(year)))+
   geom_bar(stat = "identity", position = "stack", width = 0.9) +
   #geom_point(shape = 21, fill = "white", size = 1, stroke = 1, alpha=0.8) +
-  #facet_wrap(~year, scales="fixed", ncol=2) +
-  scale_x_continuous(breaks = seq(1, 52, 4)) +
-  labs(title = ("Calendar of trap numbers employed per week"),
-       x = "week of the year",
-       y = "number of traps at national scale", fill = "year") +
+  scale_fill_manual(values =  selected_colors1)+
+  facet_wrap(~year, scales="fixed", ncol=1) +
+  scale_x_continuous(breaks = seq(1, 52, 2)) +
+  labs(title = ("Trapping schedule (number of traps employed per week"),
+       x = "Week of the year",
+       y = "Number of traps at national scale",
+      fill= "Surveillance period")+
   theme_minimal() +
   theme(axis.title.x = element_text(size = 11, face="bold"),
         axis.title.y = element_text(size = 11, face="bold"),
@@ -47,7 +47,8 @@ ggplot(trap_info, aes(x=week, y=trap_count, fill=as.factor(year)))+
         strip.text=element_text(size=12,face="bold"),
         legend.position="bottom",
         legend.title = element_text(face = "bold", size = 12),
-        legend.text = element_text(size = 10))+
+        legend.text = element_text(size = 10))
+
   scale_fill_brewer(palette = "Dark2") 
 
 

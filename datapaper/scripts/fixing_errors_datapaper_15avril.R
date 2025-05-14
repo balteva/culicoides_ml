@@ -23,11 +23,70 @@ df_indiv <- data %>%
   left_join(event, by="eventID") %>%
   left_join(ecocli, by="eventID") %>%
   select(-c(eventDate, startDayOfYear)) %>%
-  filter(!occurrenceStatus == "absent")%>% ##remove filter for habitat/unique site counts
-  relocate(stateProvince, locationID,date,ECO_CLI, .after= id) %>%
+  #filter(!occurrenceStatus == "absent")%>% ##remove filter for habitat/unique site counts
+  relocate(stateProvince, locationID,date,ECO_CLI, .after= eventID) %>%
   filter(organismQuantityType=="individuals") #select organism type of interest (i.e. all type, only female, female, only parous female etc)
 
 #sum with filter == "individuals" = [1] 6340177 #this is the correct one!
+
+
+DP <- df_indiv %>%
+  select(c(eventID, date, stateProvince, individualCount,locationID, year)) %>%
+  group_by(eventID, date, stateProvince,locationID)%>%
+  summarise(countPT=sum(individualCount))
+
+# DP_empty <- DP%>%
+#   filter(countPT<2)%>%
+#   group_by(stateProvince)%>%
+#   summarise(n=n())%>%
+#   arrange(desc(n))
+  
+#> DP_empty
+# A tibble: 13 × 2
+# stateProvince                  n
+# <chr>                      <int>
+#   1 Auvergne-Rhône-Alpes         969
+# 2 Occitanie                    861
+# 3 Grand Est                    829
+# 4 Bourgogne-Franche-Comté      700
+# 5 Nouvelle-Aquitaine           569
+# 6 Hauts-de-France              439
+# 7 Centre-Val de Loire          407
+# 8 Provence-Alpes-Côte d'Azur   386
+# 9 Pays de la Loire             380
+# 10 Normandie                    375
+# 11 Île-de-France                299
+# 12 Bretagne                     196
+# 13 Corse                         50
+
+
+DP_tpr <- DP%>%
+  group_by(stateProvince)%>%
+  summarise(zum=n_distinct(locationID))%>%
+  arrange(desc(zum))
+
+# stateProvince                zum
+# <chr>                      <int>
+#   1 Occitanie                     30
+# 2 Auvergne-Rhône-Alpes          28
+# 3 Nouvelle-Aquitaine            24
+# 4 Grand Est                     23
+# 5 Bourgogne-Franche-Comté       16
+# 6 Provence-Alpes-Côte d'Azur    16
+#  7 Hauts-de-France               15
+#  8 Bretagne                      14
+#  9 Pays de la Loire              14
+# 10 Centre-Val de Loire           11
+# 11 Normandie                     10
+# 12 Île-de-France                  6
+# 13 Corse                          4
+
+
+
+
+
+
+
 
 ####################### Pachka's code######################
 # df_indiv%>%

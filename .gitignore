@@ -11,4 +11,5 @@ datapaper/france/*
 updated_scripts/simulations_projections/new_data/*
 updated_scripts/simulations_projections/projections/abundance_predictions/*
 updated_scripts/simulations_projections/projections/presence_predictions/*
-updated_scripts/simulations_projections/.RDataTmp
+updated_scripts/simulations_projections/new_data/*
+updated_scripts/simulations_projections/projections/*
